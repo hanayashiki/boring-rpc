@@ -3,14 +3,33 @@
 Name = '#ident'
 
 Literal = 
-  '#string' |
-  '#number'
+  StringLiteral |
+  NumberLiteral |
+  BooleanLiteral |
+  NullLiteral |
+  ArrayLiteral |
+  ObjectLiteral
+
+StringLiteral = '#string'
+NumberLiteral = '#number'
+BooleanLiteral = 'true' | 'false'
+NullLiteral = 'null'
+
+ArrayLiteral = '[' LiteralList? ']'
+
+ObjectLiteral = '{' LiteralFieldList? '}'
+
+LiteralFieldList = LiteralField (',' LiteralField)* ','?
+
+LiteralField = key:Name ':' value:Literal
 
 TypeDecl = 'type' Name '=' '{' FieldList? '}'
 
 TypeExpr = 
   Name |
-  'todo'
+  TypeArray
+
+TypeArray = TypeExpr '[' ']'
 
 FieldList = Field (',' Field)* ','?
 
@@ -24,4 +43,4 @@ Decorators = Decorator Decorator*
 
 Decorator = '@' Name '(' LiteralList? ')'
 
-LiteralList = Literal (',' Literal)*
+LiteralList = Literal (',' Literal)* ','

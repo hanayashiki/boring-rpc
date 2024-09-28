@@ -42,6 +42,186 @@ impl AstNode for Literal {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct StringLiteral {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for StringLiteral {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::StringLiteral == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct NumberLiteral {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for NumberLiteral {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::NumberLiteral == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct BooleanLiteral {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for BooleanLiteral {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::BooleanLiteral == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct NullLiteral {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for NullLiteral {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::NullLiteral == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ArrayLiteral {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for ArrayLiteral {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::ArrayLiteral == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ObjectLiteral {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for ObjectLiteral {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::ObjectLiteral == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct LiteralList {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for LiteralList {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::LiteralList == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct LiteralFieldList {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for LiteralFieldList {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::LiteralFieldList == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct LiteralField {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for LiteralField {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::LiteralField == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TypeDecl {
     pub(crate) syntax: SyntaxNode,
 }
@@ -88,6 +268,26 @@ pub struct TypeExpr {
 impl AstNode for TypeExpr {
     fn can_cast(kind: SyntaxKind) -> bool {
         SyntaxKind::TypeExpr == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct TypeArray {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for TypeArray {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::TypeArray == kind
     }
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         if Self::can_cast(syntax.kind()) {
@@ -168,26 +368,6 @@ pub struct Macro {
 impl AstNode for Macro {
     fn can_cast(kind: SyntaxKind) -> bool {
         SyntaxKind::Macro == kind
-    }
-    fn cast(syntax: SyntaxNode) -> Option<Self> {
-        if Self::can_cast(syntax.kind()) {
-            Some(Self { syntax })
-        } else {
-            None
-        }
-    }
-    fn syntax(&self) -> &SyntaxNode {
-        &self.syntax
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct LiteralList {
-    pub(crate) syntax: SyntaxNode,
-}
-impl AstNode for LiteralList {
-    fn can_cast(kind: SyntaxKind) -> bool {
-        SyntaxKind::LiteralList == kind
     }
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         if Self::can_cast(syntax.kind()) {

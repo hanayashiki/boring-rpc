@@ -27,11 +27,31 @@ pub enum SyntaxKind {
     #[doc = r"node kind"]
     Literal,
     #[doc = r"node kind"]
+    StringLiteral,
+    #[doc = r"node kind"]
+    NumberLiteral,
+    #[doc = r"node kind"]
+    BooleanLiteral,
+    #[doc = r"node kind"]
+    NullLiteral,
+    #[doc = r"node kind"]
+    ArrayLiteral,
+    #[doc = r"node kind"]
+    ObjectLiteral,
+    #[doc = r"node kind"]
+    LiteralList,
+    #[doc = r"node kind"]
+    LiteralFieldList,
+    #[doc = r"node kind"]
+    LiteralField,
+    #[doc = r"node kind"]
     TypeDecl,
     #[doc = r"node kind"]
     FieldList,
     #[doc = r"node kind"]
     TypeExpr,
+    #[doc = r"node kind"]
+    TypeArray,
     #[doc = r"node kind"]
     Field,
     #[doc = r"node kind"]
@@ -40,8 +60,6 @@ pub enum SyntaxKind {
     Decorators,
     #[doc = r"node kind"]
     Macro,
-    #[doc = r"node kind"]
-    LiteralList,
     #[doc = r"node kind"]
     Decorator,
 }
