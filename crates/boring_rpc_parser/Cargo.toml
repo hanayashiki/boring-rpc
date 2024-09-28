@@ -1,0 +1,4 @@
+[package]
+name = "boring_rpc_parser"
+version = "0.1.0"
+edition = "2021"

@@ -93,7 +93,7 @@ type FileMessageCreate = {
 }
 
 // RPC interface definition
-interface Chat {
+service Chat {
     getMessageById(id: i64): Message;
     listMessages(): Message[];
 }
@@ -101,7 +101,14 @@ interface Chat {
 
 ## References
 
-1. Rust Analyzer: https://rust-analyzer.github.io/blog/2020/10/24/introducing-ungrammar.html
-    1. https://github.com/rust-lang/rust-analyzer/blob/master/xtask/src/codegen/grammar.rs
-    2. https://github.com/rust-lang/rust-analyzer/blob/master/crates/syntax/rust.ungram
-    3. https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
+1. Rust Analyzer Syntax: https://rust-analyzer.github.io/blog/2020/10/24/introducing-ungrammar.html
+    1. Syntax
+        1. https://github.com/rust-lang/rust-analyzer/blob/master/xtask/src/codegen/grammar.rs
+        2. https://github.com/rust-lang/rust-analyzer/blob/master/crates/syntax/rust.ungram
+        3. https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
+    4. Parser: 
+        1. Pratt Parser: https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html
+        1. https://github.com/rust-lang/rust-analyzer/blob/master/crates/parser/src/event.rs
+
+2. Rust Analyzer Architecture
+    1. https://github.com/rust-lang/rust-analyzer/blob/d10cdd25e7a5509252aa2af077b66c679e313ba0/docs/dev/architecture.md

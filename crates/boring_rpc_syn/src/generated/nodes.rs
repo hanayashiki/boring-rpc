@@ -10,7 +10,7 @@ impl AstNode for Name {
         SyntaxKind::Name == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
@@ -18,7 +18,7 @@ impl AstNode for Name {
 }
 impl Name {
     pub fn ident(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
     }
 }
 
@@ -31,30 +31,30 @@ impl AstNode for Literal {
         SyntaxKind::Literal == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
     }
 }
 impl Literal {
-    pub fn string_literal(&self) -> Option<StringLiteral> {
-        None
-    }
-    pub fn null_literal(&self) -> Option<NullLiteral> {
-        None
-    }
     pub fn array_literal(&self) -> Option<ArrayLiteral> {
-        None
-    }
-    pub fn object_literal(&self) -> Option<ObjectLiteral> {
-        None
-    }
-    pub fn number_literal(&self) -> Option<NumberLiteral> {
-        None
+        todo![]
     }
     pub fn boolean_literal(&self) -> Option<BooleanLiteral> {
-        None
+        todo![]
+    }
+    pub fn null_literal(&self) -> Option<NullLiteral> {
+        todo![]
+    }
+    pub fn number_literal(&self) -> Option<NumberLiteral> {
+        todo![]
+    }
+    pub fn object_literal(&self) -> Option<ObjectLiteral> {
+        todo![]
+    }
+    pub fn string_literal(&self) -> Option<StringLiteral> {
+        todo![]
     }
 }
 
@@ -67,7 +67,7 @@ impl AstNode for StringLiteral {
         SyntaxKind::StringLiteral == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
@@ -75,7 +75,7 @@ impl AstNode for StringLiteral {
 }
 impl StringLiteral {
     pub fn string(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
     }
 }
 
@@ -88,7 +88,7 @@ impl AstNode for NumberLiteral {
         SyntaxKind::NumberLiteral == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
@@ -96,7 +96,7 @@ impl AstNode for NumberLiteral {
 }
 impl NumberLiteral {
     pub fn number(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
     }
 }
 
@@ -109,18 +109,18 @@ impl AstNode for BooleanLiteral {
         SyntaxKind::BooleanLiteral == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
     }
 }
 impl BooleanLiteral {
-    pub fn true_keyword(&self) -> Option<SyntaxToken> {
-        None
-    }
     pub fn false_keyword(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
+    }
+    pub fn true_keyword(&self) -> Option<SyntaxToken> {
+        todo![]
     }
 }
 
@@ -133,7 +133,7 @@ impl AstNode for NullLiteral {
         SyntaxKind::NullLiteral == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
@@ -141,7 +141,7 @@ impl AstNode for NullLiteral {
 }
 impl NullLiteral {
     pub fn null_keyword(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
     }
 }
 
@@ -154,21 +154,21 @@ impl AstNode for ArrayLiteral {
         SyntaxKind::ArrayLiteral == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
     }
 }
 impl ArrayLiteral {
-    pub fn r_bracket(&self) -> Option<SyntaxToken> {
-        None
-    }
     pub fn literal_list(&self) -> Option<LiteralList> {
-        None
+        todo![]
     }
     pub fn l_bracket(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
+    }
+    pub fn r_bracket(&self) -> Option<SyntaxToken> {
+        todo![]
     }
 }
 
@@ -181,7 +181,7 @@ impl AstNode for ObjectLiteral {
         SyntaxKind::ObjectLiteral == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
@@ -189,13 +189,13 @@ impl AstNode for ObjectLiteral {
 }
 impl ObjectLiteral {
     pub fn literal_field_list(&self) -> Option<LiteralFieldList> {
-        None
-    }
-    pub fn r_curly(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
     }
     pub fn l_curly(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
+    }
+    pub fn r_curly(&self) -> Option<SyntaxToken> {
+        todo![]
     }
 }
 
@@ -208,7 +208,7 @@ impl AstNode for LiteralList {
         SyntaxKind::LiteralList == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
@@ -216,10 +216,10 @@ impl AstNode for LiteralList {
 }
 impl LiteralList {
     pub fn comma(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
     }
-    pub fn literal(&self) -> std::vec::Vec<Literal> {
-        vec![]
+    pub fn literals(&self) -> std::vec::Vec<Literal> {
+        todo![]
     }
 }
 
@@ -232,18 +232,18 @@ impl AstNode for LiteralFieldList {
         SyntaxKind::LiteralFieldList == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
     }
 }
 impl LiteralFieldList {
-    pub fn literal_field(&self) -> std::vec::Vec<LiteralField> {
-        vec![]
-    }
     pub fn comma(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
+    }
+    pub fn literal_fields(&self) -> std::vec::Vec<LiteralField> {
+        todo![]
     }
 }
 
@@ -256,7 +256,7 @@ impl AstNode for LiteralField {
         SyntaxKind::LiteralField == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
@@ -264,13 +264,13 @@ impl AstNode for LiteralField {
 }
 impl LiteralField {
     pub fn colon(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
     }
     pub fn key(&self) -> Option<Name> {
-        None
+        todo![]
     }
     pub fn value(&self) -> Option<Literal> {
-        None
+        todo![]
     }
 }
 
@@ -283,30 +283,30 @@ impl AstNode for TypeDecl {
         SyntaxKind::TypeDecl == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
     }
 }
 impl TypeDecl {
+    pub fn equal(&self) -> Option<SyntaxToken> {
+        todo![]
+    }
     pub fn field_list(&self) -> Option<FieldList> {
-        None
+        todo![]
     }
     pub fn name(&self) -> Option<Name> {
-        None
-    }
-    pub fn r_curly(&self) -> Option<SyntaxToken> {
-        None
-    }
-    pub fn equal(&self) -> Option<SyntaxToken> {
-        None
-    }
-    pub fn l_curly(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
     }
     pub fn type_keyword(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
+    }
+    pub fn l_curly(&self) -> Option<SyntaxToken> {
+        todo![]
+    }
+    pub fn r_curly(&self) -> Option<SyntaxToken> {
+        todo![]
     }
 }
 
@@ -319,18 +319,18 @@ impl AstNode for FieldList {
         SyntaxKind::FieldList == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
     }
 }
 impl FieldList {
-    pub fn field(&self) -> std::vec::Vec<Field> {
-        vec![]
-    }
     pub fn comma(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
+    }
+    pub fn fields(&self) -> std::vec::Vec<Field> {
+        todo![]
     }
 }
 
@@ -343,7 +343,7 @@ impl AstNode for TypeExpr {
         SyntaxKind::TypeExpr == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
@@ -351,10 +351,10 @@ impl AstNode for TypeExpr {
 }
 impl TypeExpr {
     pub fn name(&self) -> Option<Name> {
-        None
+        todo![]
     }
     pub fn type_array(&self) -> Option<TypeArray> {
-        None
+        todo![]
     }
 }
 
@@ -367,21 +367,21 @@ impl AstNode for TypeArray {
         SyntaxKind::TypeArray == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
     }
 }
 impl TypeArray {
-    pub fn r_bracket(&self) -> Option<SyntaxToken> {
-        None
-    }
     pub fn type_expr(&self) -> Option<TypeExpr> {
-        None
+        todo![]
     }
     pub fn l_bracket(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
+    }
+    pub fn r_bracket(&self) -> Option<SyntaxToken> {
+        todo![]
     }
 }
 
@@ -394,27 +394,27 @@ impl AstNode for Field {
         SyntaxKind::Field == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
     }
 }
 impl Field {
-    pub fn field_name(&self) -> Option<Name> {
-        None
-    }
-    pub fn field_type(&self) -> Option<TypeExpr> {
-        None
-    }
     pub fn colon(&self) -> Option<SyntaxToken> {
-        None
-    }
-    pub fn macro_attrs(&self) -> Option<MacroAttrs> {
-        None
+        todo![]
     }
     pub fn decorator_attrs(&self) -> Option<DecoratorAttrs> {
-        None
+        todo![]
+    }
+    pub fn macro_attrs(&self) -> Option<MacroAttrs> {
+        todo![]
+    }
+    pub fn field_name(&self) -> Option<Name> {
+        todo![]
+    }
+    pub fn field_type(&self) -> Option<TypeExpr> {
+        todo![]
     }
 }
 
@@ -427,15 +427,15 @@ impl AstNode for MacroAttrs {
         SyntaxKind::MacroAttrs == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
     }
 }
 impl MacroAttrs {
-    pub fn macro_attr(&self) -> std::vec::Vec<MacroAttr> {
-        vec![]
+    pub fn macro_attrs(&self) -> std::vec::Vec<MacroAttr> {
+        todo![]
     }
 }
 
@@ -448,15 +448,15 @@ impl AstNode for DecoratorAttrs {
         SyntaxKind::DecoratorAttrs == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
     }
 }
 impl DecoratorAttrs {
-    pub fn decorator_attr(&self) -> std::vec::Vec<DecoratorAttr> {
-        vec![]
+    pub fn decorator_attrs(&self) -> std::vec::Vec<DecoratorAttr> {
+        todo![]
     }
 }
 
@@ -469,27 +469,27 @@ impl AstNode for MacroAttr {
         SyntaxKind::MacroAttr == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
     }
 }
 impl MacroAttr {
-    pub fn name(&self) -> Option<Name> {
-        None
-    }
-    pub fn r_parenthesis(&self) -> Option<SyntaxToken> {
-        None
-    }
     pub fn hash(&self) -> Option<SyntaxToken> {
-        None
-    }
-    pub fn literal_list(&self) -> Option<LiteralList> {
-        None
+        todo![]
     }
     pub fn l_parenthesis(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
+    }
+    pub fn r_parenthesis(&self) -> Option<SyntaxToken> {
+        todo![]
+    }
+    pub fn literal_list(&self) -> Option<LiteralList> {
+        todo![]
+    }
+    pub fn name(&self) -> Option<Name> {
+        todo![]
     }
 }
 
@@ -502,7 +502,7 @@ impl AstNode for DecoratorAttr {
         SyntaxKind::DecoratorAttr == kind
     }
     fn cast(_syntax: SyntaxNode) -> Option<Self> {
-        None
+        todo![]
     }
     fn syntax(&self) -> &SyntaxNode {
         &self.syntax
@@ -510,18 +510,18 @@ impl AstNode for DecoratorAttr {
 }
 impl DecoratorAttr {
     pub fn l_parenthesis(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
     }
     pub fn r_parenthesis(&self) -> Option<SyntaxToken> {
-        None
-    }
-    pub fn name(&self) -> Option<Name> {
-        None
+        todo![]
     }
     pub fn at(&self) -> Option<SyntaxToken> {
-        None
+        todo![]
     }
     pub fn literal_list(&self) -> Option<LiteralList> {
-        None
+        todo![]
+    }
+    pub fn name(&self) -> Option<Name> {
+        todo![]
     }
 }

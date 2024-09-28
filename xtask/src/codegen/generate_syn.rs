@@ -87,24 +87,31 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
 
                 quote! {
                     pub fn #name(&self) -> Option<SyntaxToken> {
-                        None
+                        todo![]
                     }
                 }
             }
             NodeField::Node { many, ty } => {
-                let name = format_ident!("{}", utils::to_lower_snake_case(name));
+                let name = format_ident!(
+                    "{}{}",
+                    utils::to_lower_snake_case(name),
+                    match many {
+                        true => "s",
+                        false => "",
+                    }
+                );
                 let ty = format_ident!("{}", ty);
 
                 if *many {
                     quote! {
                         pub fn #name(&self) -> std::vec::Vec<#ty> {
-                            vec![]
+                            todo![]
                         }
                     }
                 } else {
                     quote! {
                         pub fn #name(&self) -> Option<#ty> {
-                            None
+                            todo![]
                         }
                     }
                 }
@@ -121,9 +128,7 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
 
                 impl AstNode for #struct_name {
                     fn can_cast(kind: SyntaxKind) -> bool { SyntaxKind::#struct_name == kind }
-                    fn cast(_syntax: SyntaxNode) -> Option<Self> {
-                        None
-                    }
+                    fn cast(_syntax: SyntaxNode) -> Option<Self> { todo![] }
                     fn syntax(&self) -> &SyntaxNode { &self.syntax }
                 }
 
