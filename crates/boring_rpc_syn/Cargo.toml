@@ -1,0 +1,7 @@
+[package]
+name = "boring_rpc_syn"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ungrammar = "1.16.1"
