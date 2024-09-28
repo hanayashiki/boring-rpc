@@ -33,14 +33,14 @@ TypeArray = TypeExpr '[' ']'
 
 FieldList = Field (',' Field)* ','?
 
-Field = Macros? Decorators? name:Name ':' type:TypeExpr
+Field = MacroAttrs? DecoratorAttrs? field_name:Name ':' field_type:TypeExpr
 
-Macros = Macro Macro*
+MacroAttrs = MacroAttr MacroAttr*
 
-Macro = '#' Name '(' LiteralList? ')'
+MacroAttr = '#' Name '(' LiteralList? ')'
 
-Decorators = Decorator Decorator*
+DecoratorAttrs = DecoratorAttr DecoratorAttr*
 
-Decorator = '@' Name '(' LiteralList? ')'
+DecoratorAttr = '@' Name '(' LiteralList? ')'
 
 LiteralList = Literal (',' Literal)* ','

@@ -3,11 +3,17 @@ pub enum SyntaxKind {
     #[doc = r"token kind"]
     TypeKeyword,
     #[doc = r"token kind"]
+    TrueKeyword,
+    #[doc = r"token kind"]
+    FalseKeyword,
+    #[doc = r"token kind"]
+    NullKeyword,
+    #[doc = r"token kind"]
     Ident,
     #[doc = r"token kind"]
-    StringLiteral,
+    String,
     #[doc = r"token kind"]
-    NumberLiteral,
+    Number,
     #[doc = r"token kind"]
     Whitespace,
     #[doc = r"token kind"]
@@ -22,6 +28,22 @@ pub enum SyntaxKind {
     LCurly,
     #[doc = r"token kind"]
     RCurly,
+    #[doc = r"token kind"]
+    LBracket,
+    #[doc = r"token kind"]
+    RBracket,
+    #[doc = r"token kind"]
+    LParenthesis,
+    #[doc = r"token kind"]
+    RParenthesis,
+    #[doc = r"token kind"]
+    Comma,
+    #[doc = r"token kind"]
+    Hash,
+    #[doc = r"token kind"]
+    At,
+    #[doc = r"token kind"]
+    Colon,
     #[doc = r"node kind"]
     Name,
     #[doc = r"node kind"]
@@ -55,11 +77,11 @@ pub enum SyntaxKind {
     #[doc = r"node kind"]
     Field,
     #[doc = r"node kind"]
-    Macros,
+    MacroAttrs,
     #[doc = r"node kind"]
-    Decorators,
+    DecoratorAttrs,
     #[doc = r"node kind"]
-    Macro,
+    MacroAttr,
     #[doc = r"node kind"]
-    Decorator,
+    DecoratorAttr,
 }

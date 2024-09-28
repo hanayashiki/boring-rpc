@@ -22,6 +22,66 @@ impl AstToken for TypeKeyword {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct TrueKeyword {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for TrueKeyword {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::TrueKeyword == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct FalseKeyword {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for FalseKeyword {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::FalseKeyword == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct NullKeyword {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for NullKeyword {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::NullKeyword == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Ident {
     pub(crate) syntax: SyntaxToken,
 }
@@ -42,12 +102,12 @@ impl AstToken for Ident {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct StringLiteral {
+pub struct String {
     pub(crate) syntax: SyntaxToken,
 }
-impl AstToken for StringLiteral {
+impl AstToken for String {
     fn can_cast(kind: SyntaxKind) -> bool {
-        SyntaxKind::StringLiteral == kind
+        SyntaxKind::String == kind
     }
     fn cast(syntax: SyntaxToken) -> Option<Self> {
         if Self::can_cast(syntax.kind()) {
@@ -62,12 +122,12 @@ impl AstToken for StringLiteral {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct NumberLiteral {
+pub struct Number {
     pub(crate) syntax: SyntaxToken,
 }
-impl AstToken for NumberLiteral {
+impl AstToken for Number {
     fn can_cast(kind: SyntaxKind) -> bool {
-        SyntaxKind::NumberLiteral == kind
+        SyntaxKind::Number == kind
     }
     fn cast(syntax: SyntaxToken) -> Option<Self> {
         if Self::can_cast(syntax.kind()) {
@@ -208,6 +268,166 @@ pub struct RCurly {
 impl AstToken for RCurly {
     fn can_cast(kind: SyntaxKind) -> bool {
         SyntaxKind::RCurly == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct LBracket {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for LBracket {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::LBracket == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct RBracket {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for RBracket {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::RBracket == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct LParenthesis {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for LParenthesis {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::LParenthesis == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct RParenthesis {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for RParenthesis {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::RParenthesis == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Comma {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for Comma {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::Comma == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Hash {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for Hash {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::Hash == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct At {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for At {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::At == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Colon {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for Colon {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::Colon == kind
     }
     fn cast(syntax: SyntaxToken) -> Option<Self> {
         if Self::can_cast(syntax.kind()) {

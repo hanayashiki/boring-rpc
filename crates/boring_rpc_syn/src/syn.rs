@@ -8,6 +8,14 @@ pub trait AstToken {
     fn syntax(&self) -> &SyntaxToken;
 }
 
+pub trait AstNode {
+    fn can_cast(kind: SyntaxKind) -> bool;
+    fn cast(syntax: SyntaxNode) -> Option<Self>
+    where
+        Self: Sized;
+    fn syntax(&self) -> &SyntaxNode;
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct SyntaxToken {}
 

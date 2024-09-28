@@ -1,6 +1,5 @@
 use quote::{format_ident, quote};
 use std::{
-    fmt::format,
     fs::{self, create_dir_all, read_to_string},
     path::Path,
 };
@@ -8,24 +7,11 @@ use xshell::{cmd, Shell};
 
 use ungrammar::Grammar;
 
-// (ungram_name, struct_name)
-static TOKEN_DEFS: &'static [(&str, &str)] = &[
-    // Keywords
-    ("type", "TypeKeyword"),
-    // Literals
-    ("#ident", "Ident"),
-    ("#string", "StringLiteral"),
-    ("#number", "NumberLiteral"),
-    // Trivia
-    (" ", "Whitespace"),
-    ("\t", "Tab"),
-    ("\n", "Newline"),
-    ("EOF", "EOF"),
-    // Puncts
-    ("=", "Equal"),
-    ("{", "LCurly"),
-    ("}", "RCurly"),
-];
+use crate::codegen::utils;
+use crate::codegen::{
+    constants::TOKEN_DEFS,
+    rule_collector::{NodeField, RuleCollector},
+};
 
 fn generate_syntax_kind_rs(grammar: &Grammar) -> String {
     let token_kinds = TOKEN_DEFS.iter().map(|(_, n)| format_ident!("{}", n));
@@ -37,11 +23,11 @@ fn generate_syntax_kind_rs(grammar: &Grammar) -> String {
     let ast = quote! {
         #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
         pub enum SyntaxKind {
-            
+
             #(
                 ///token kind
                 #token_kinds,)*
-            
+
             #(
                 ///node kind
                 #node_kinds,
@@ -87,6 +73,44 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
         let node = &grammar[node];
         let struct_name = format_ident!("{}", node.name);
 
+        let mut collector = RuleCollector::new(grammar, &node.rule);
+        let fields = collector.collect();
+
+        let field_methods = fields.iter().map(|(name, field)| match field {
+            NodeField::Token(token_ungram_name) => {
+                let struct_name = TOKEN_DEFS
+                    .iter()
+                    .find(|(ungram_name, _)| ungram_name == token_ungram_name)
+                    .expect(format!("{} is not a valid token", token_ungram_name).as_str())
+                    .1;
+                let name = format_ident!("{}", utils::to_lower_snake_case(struct_name));
+
+                quote! {
+                    pub fn #name(&self) -> Option<SyntaxToken> {
+                        None
+                    }
+                }
+            }
+            NodeField::Node { many, ty } => {
+                let name = format_ident!("{}", utils::to_lower_snake_case(name));
+                let ty = format_ident!("{}", ty);
+
+                if *many {
+                    quote! {
+                        pub fn #name(&self) -> std::vec::Vec<#ty> {
+                            vec![]
+                        }
+                    }
+                } else {
+                    quote! {
+                        pub fn #name(&self) -> Option<#ty> {
+                            None
+                        }
+                    }
+                }
+            }
+        });
+
         format!(
             "\n\n{}",
             quote! {
@@ -97,17 +121,21 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
 
                 impl AstNode for #struct_name {
                     fn can_cast(kind: SyntaxKind) -> bool { SyntaxKind::#struct_name == kind }
-                    fn cast(syntax: SyntaxNode) -> Option<Self> {
-                        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+                    fn cast(_syntax: SyntaxNode) -> Option<Self> {
+                        None
                     }
                     fn syntax(&self) -> &SyntaxNode { &self.syntax }
+                }
+
+                impl #struct_name {
+                    #(#field_methods)*
                 }
             },
         )
     });
 
     let header = "
-        use crate::syn::{SyntaxKind, SyntaxNode};
+        use crate::syn::{SyntaxKind, SyntaxToken, SyntaxNode, AstNode};
     ";
 
     format!("{}\n{}", header, structs.collect::<String>())
