@@ -14,6 +14,7 @@ pub static TOKEN_DEFS: &'static [(&str, &str)] = &[
     ("\t", "Tab"),
     ("\n", "Newline"),
     ("EOF", "EOF"),
+    ("INVALID", "Invalid"),
     // Puncts
     ("=", "Equal"),
     ("{", "LCurly"),

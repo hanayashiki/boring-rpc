@@ -23,6 +23,8 @@ pub enum SyntaxKind {
     #[doc = r"token kind"]
     EOF,
     #[doc = r"token kind"]
+    Invalid,
+    #[doc = r"token kind"]
     Equal,
     #[doc = r"token kind"]
     LCurly,

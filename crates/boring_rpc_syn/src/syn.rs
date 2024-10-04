@@ -17,13 +17,32 @@ pub trait AstNode {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct SyntaxToken {}
+pub struct SyntaxToken {
+    kind: SyntaxKind,
+    value: String,
+}
 
 impl SyntaxToken {
+    pub fn new(kind: SyntaxKind, value: String) -> Self {
+        Self { kind, value }
+    }
+
     pub fn kind(&self) -> SyntaxKind {
-        SyntaxKind::EOF
+        self.kind
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct SyntaxNode {}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct GreenToken {
+    kind: SyntaxKind,
+    value: String,
+}
+
+impl GreenToken {
+    pub fn new(kind: SyntaxKind, value: String) -> Self {
+        Self { kind, value }
+    }
+}

@@ -222,6 +222,26 @@ impl AstToken for EOF {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Invalid {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for Invalid {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::Invalid == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Equal {
     pub(crate) syntax: SyntaxToken,
 }
