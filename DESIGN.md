@@ -112,3 +112,6 @@ service Chat {
 
 2. Rust Analyzer Architecture
     1. https://github.com/rust-lang/rust-analyzer/blob/d10cdd25e7a5509252aa2af077b66c679e313ba0/docs/dev/architecture.md
+
+3. Linked List
+    1. https://rust-unofficial.github.io/too-many-lists/

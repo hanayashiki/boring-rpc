@@ -20,6 +20,23 @@ fn generate_syntax_kind_rs(grammar: &Grammar) -> String {
         .iter()
         .map(|node| format_ident!("{}", &grammar[node].name));
 
+    let token_to_ungram_name = TOKEN_DEFS.iter().map(|(ungram_name, struct_name)| {
+        let struct_name = format_ident!("{}", struct_name);
+
+        quote! {
+            SyntaxKind::#struct_name => #ungram_name,
+        }
+    });
+
+    let node_to_ungram_name = grammar.iter().map(|node| {
+        let struct_name = format_ident!("{}", &grammar[node].name);
+        let ungram_name = &grammar[node].name;
+
+        quote! {
+            SyntaxKind::#struct_name => #ungram_name,
+        }
+    });
+
     let ast = quote! {
         #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
         pub enum SyntaxKind {
@@ -32,6 +49,15 @@ fn generate_syntax_kind_rs(grammar: &Grammar) -> String {
                 ///node kind
                 #node_kinds,
             )*
+        }
+
+        impl SyntaxKind {
+            pub fn to_ungram_name(&self) -> &'static str {
+                match self {
+                    #(#token_to_ungram_name)*
+                    #(#node_to_ungram_name)*
+                }
+            }
         }
     };
 

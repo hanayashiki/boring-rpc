@@ -116,11 +116,20 @@ impl<'a> LexedStr<'a> {
                     iter.next();
                     tokens.push(GreenToken::new(SyntaxKind::At, ":".to_string()));
                 }
-                _ => {}
+                _ => {
+                    iter.next();
+                    tokens.push(GreenToken::new(SyntaxKind::Invalid, c.to_string()));
+                }
             };
         }
 
+        tokens.push(GreenToken::new(SyntaxKind::EOF, "".to_string()));
+
         Self { str, tokens }
+    }
+
+    pub fn to_tokens(self) -> Vec<GreenToken> {
+        self.tokens
     }
 }
 
