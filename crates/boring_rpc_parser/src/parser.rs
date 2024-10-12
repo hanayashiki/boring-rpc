@@ -1,7 +1,6 @@
 use boring_rpc_syn::{
-    syn::{GreenNode, GreenNodeOrToken::*},
-    syntax_error::SyntaxError,
-    GreenToken, SyntaxKind, TextRange, TextSize,
+    tokens::Whitespace, GreenNode, GreenNodeOrToken::*, GreenToken, SyntaxError, SyntaxKind,
+    TextRange, TextSize,
 };
 
 use crate::lexed_str::LexedStr;
@@ -9,6 +8,7 @@ use crate::lexed_str::LexedStr;
 #[cfg(test)]
 mod test_parser;
 
+#[derive(Default, Debug)]
 pub struct Parser {
     tokens: Vec<GreenToken>,
     pos: usize,
@@ -16,16 +16,10 @@ pub struct Parser {
 }
 
 impl Parser {
-    pub fn new(tokens: Vec<GreenToken>) -> Self {
-        Self {
-            tokens,
-            pos: 0,
-            errors: Vec::new(),
-        }
-    }
-
     pub fn of(s: &str) -> Self {
-        Parser::new(LexedStr::new(s).to_tokens())
+        let mut p = Parser::default();
+        p.tokens = LexedStr::new(s).to_tokens();
+        return p;
     }
 
     pub fn eat(&mut self, kind: SyntaxKind) -> Option<GreenToken> {
@@ -36,6 +30,16 @@ impl Parser {
             r
         } else {
             None
+        }
+    }
+
+    pub fn eat_push(&mut self, node: &mut GreenNode, kind: SyntaxKind) -> bool {
+        match self.eat(kind) {
+            Some(token) => {
+                node.push(Token(token));
+                true
+            }
+            None => false,
         }
     }
 
@@ -56,15 +60,20 @@ impl Parser {
         self.range_of(self.pos)
     }
 
-    fn eat_keyword(&mut self) -> Option<GreenToken> {
-        let cur = self.peek();
-
-        let kw = match (cur.kind(), cur.value()) {
-            (SyntaxKind::Ident, "type") => Some(cur.with_kind(SyntaxKind::TypeKeyword)),
-            (SyntaxKind::Ident, "true") => Some(cur.with_kind(SyntaxKind::TrueKeyword)),
-            (SyntaxKind::Ident, "false") => Some(cur.with_kind(SyntaxKind::FalseKeyword)),
+    fn peek_keyword(&self) -> Option<SyntaxKind> {
+        match self.peek().kind() {
+            SyntaxKind::Ident => match self.peek().value() {
+                "type" => Some(SyntaxKind::TypeKeyword),
+                "true" => Some(SyntaxKind::TrueKeyword),
+                "false" => Some(SyntaxKind::FalseKeyword),
+                _ => None,
+            },
             _ => None,
-        };
+        }
+    }
+
+    fn eat_keyword(&mut self) -> Option<GreenToken> {
+        let kw = self.peek_keyword().map(|kind| self.peek().with_kind(kind));
 
         if kw.is_some() {
             self.pos += 1;
@@ -73,7 +82,7 @@ impl Parser {
         kw
     }
 
-    fn expect_token(&mut self, kind: SyntaxKind) -> Option<GreenToken> {
+    fn expect(&mut self, kind: SyntaxKind) -> Option<GreenToken> {
         let ident = self.eat(kind);
 
         ident.or_else(|| {
@@ -89,6 +98,35 @@ impl Parser {
         })
     }
 
+    fn expect_push(&mut self, node: &mut GreenNode, kind: SyntaxKind) -> bool {
+        match self.expect(kind) {
+            Some(token) => {
+                node.push(Token(token));
+                true
+            }
+            None => false,
+        }
+    }
+
+    pub fn parse_module(&mut self) -> GreenNode {
+        let mut node = GreenNode::new(SyntaxKind::Module, Vec::new());
+        loop {
+            match self.peek_keyword() {
+                Some(SyntaxKind::TypeKeyword) => {
+                    node.push(Node(self.parse_type_decl()));
+                }
+                _ => match self.peek().kind() {
+                    SyntaxKind::EOF => break,
+                    _ => todo!("error handling"),
+                },
+            }
+
+            self.eat(SyntaxKind::Whitespace);
+        }
+
+        node
+    }
+
     fn parse_type_decl(&mut self) -> GreenNode {
         let type_kw = self.eat_keyword().unwrap();
         assert!(type_kw.kind() == SyntaxKind::TypeKeyword);
@@ -96,26 +134,20 @@ impl Parser {
         self.eat(SyntaxKind::Whitespace);
 
         let mut node = GreenNode::new(SyntaxKind::TypeDecl, vec![Token(type_kw)]);
+        {
+            let node = &mut node;
 
-        self.expect_token(SyntaxKind::Ident)
-            .map(|ident| node.push(Token(ident)));
+            self.expect_push(node, SyntaxKind::Ident);
+            self.eat_push(node, SyntaxKind::Whitespace);
+            self.expect_push(node, SyntaxKind::Equal);
+            self.eat_push(node, SyntaxKind::Whitespace);
+            self.expect_push(node, SyntaxKind::LCurly);
+            self.eat_push(node, SyntaxKind::Whitespace);
 
-        self.eat(SyntaxKind::Whitespace);
+            node.push(Node(self.parse_field_list()));
 
-        self.expect_token(SyntaxKind::Equal)
-            .map(|ident| node.push(Token(ident)));
-
-        self.eat(SyntaxKind::Whitespace);
-
-        self.expect_token(SyntaxKind::LCurly)
-            .map(|ident| node.push(Token(ident)));
-
-        self.eat(SyntaxKind::Whitespace);
-
-        node.push(Node(self.parse_field_list()));
-
-        self.expect_token(SyntaxKind::RCurly)
-            .map(|ident| node.push(Token(ident)));
+            self.expect_push(node, SyntaxKind::RCurly);
+        }
 
         node
     }

@@ -86,6 +86,10 @@ pub enum SyntaxKind {
     MacroAttr,
     #[doc = r"node kind"]
     DecoratorAttr,
+    #[doc = r"node kind"]
+    Module,
+    #[doc = r"node kind"]
+    TypeDeclList,
 }
 impl SyntaxKind {
     pub fn to_ungram_name(&self) -> &'static str {
@@ -133,6 +137,8 @@ impl SyntaxKind {
             SyntaxKind::DecoratorAttrs => "DecoratorAttrs",
             SyntaxKind::MacroAttr => "MacroAttr",
             SyntaxKind::DecoratorAttr => "DecoratorAttr",
+            SyntaxKind::Module => "Module",
+            SyntaxKind::TypeDeclList => "TypeDeclList",
         }
     }
 }

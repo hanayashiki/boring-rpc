@@ -44,3 +44,7 @@ DecoratorAttrs = DecoratorAttr DecoratorAttr*
 DecoratorAttr = '@' Name '(' LiteralList? ')'
 
 LiteralList = Literal (',' Literal)* ','
+
+Module = TypeDeclList?
+
+TypeDeclList = TypeDecl (TypeDecl)*

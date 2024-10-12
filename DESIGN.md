@@ -29,12 +29,12 @@ TODO: codeblocks should be tagged with `br`
 // Scalar Types
 // Scalars are `JSONValue`s that have an atomic semantic and its mapping with the actual language is user-provided.
 // e.g. you can encode `Date` in the format of `"2024-01-01"` or `"20240101"` in string, or even `{ "year": 2024, "month": 1, "day": 1 }`
-import { Date, URL } from 'my-scalars';
+import { Date, URL } from 'my-scalars'
 
 // Metadata
 // Metadatas are also user-provided piece of info that can be attached to each level of the syntax
 // Users can write plugins in the using language against them, e.g. limiting the length of strings.
-import { maxLength } from 'my-metadata';
+import { maxLength } from 'my-metadata'
 
 // Struct Type
 type TextMessage = {
@@ -46,7 +46,7 @@ type TextMessage = {
 
     @label('Is Public?')
     isPublic: boolean,
-};
+}
 
 type FileMessage = {
     id: i64,
@@ -61,7 +61,7 @@ enum FileType {
     Image,
     Audio,
     Unknown,
-};
+}
 
 // Union Types
 type Message = TextMessage | FileMessage;
@@ -115,3 +115,17 @@ service Chat {
 
 3. Linked List
     1. https://rust-unofficial.github.io/too-many-lists/
+
+4. TypeScript
+    1. checker
+        1. checking: 
+            1. checkSourceElement
+                1. checkVariableStatement
+                2. checkIdentifier
+                    1. getResolvedSymbol
+                        1. resolveName <- createNameResolver
+        2. Public API: 
+            1. getSuggestionDiagnostics
+                1. checkSourceFileWithEagerDiagnostics
+    2. utilities
+        1. createNameResolver

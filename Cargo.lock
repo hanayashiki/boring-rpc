@@ -9,12 +9,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "86fdf8605db99b54d3cd748a44c6d04df638eb5dafb219b135d0149bd0db01f6"
 
 [[package]]
-name = "boring_rpc_anaylzer"
-version = "0.1.0"
+name = "boring_rpc_analyzer"
+version = "0.0.0"
+dependencies = [
+ "boring_rpc_parser",
+ "boring_rpc_syn",
+ "expect-test",
+]
 
 [[package]]
 name = "boring_rpc_parser"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "boring_rpc_syn",
  "expect-test",
@@ -24,7 +29,7 @@ dependencies = [
 
 [[package]]
 name = "boring_rpc_syn"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "text-size",
  "ungrammar",

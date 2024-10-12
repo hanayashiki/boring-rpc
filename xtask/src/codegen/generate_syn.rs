@@ -88,7 +88,8 @@ fn generate_tokens_rs() -> String {
     });
 
     let header = "
-        use crate::syn::{AstToken, SyntaxKind, SyntaxToken};
+        use crate::syn::{AstToken, SyntaxToken};
+        use crate::SyntaxKind;
     ";
 
     format!("{}\n{}", header, structs.collect::<String>())
@@ -130,14 +131,16 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
 
                 if *many {
                     quote! {
-                        pub fn #name(&self) -> std::vec::Vec<#ty> {
-                            todo![]
+                        pub fn #name(&self) -> Vec<#ty> {
+                            self.syntax()
+                                .cast_children::<#ty>()
                         }
                     }
                 } else {
                     quote! {
                         pub fn #name(&self) -> Option<#ty> {
-                            todo![]
+                            self.syntax()
+                                .cast_child::<#ty>()
                         }
                     }
                 }
@@ -147,14 +150,16 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
         format!(
             "\n\n{}",
             quote! {
-                #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+                #[derive(Debug, Clone)]
                 pub struct #struct_name {
                     pub(crate) syntax: SyntaxNode,
                 }
 
                 impl AstNode for #struct_name {
                     fn can_cast(kind: SyntaxKind) -> bool { SyntaxKind::#struct_name == kind }
-                    fn cast(_syntax: SyntaxNode) -> Option<Self> { todo![] }
+                    fn cast(syntax: SyntaxNode) -> Option<Self> {
+                        if Self::can_cast(syntax.kind()) { Some(Self { syntax }) } else { None }
+                    }
                     fn syntax(&self) -> &SyntaxNode { &self.syntax }
                 }
 
@@ -166,7 +171,8 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
     });
 
     let header = "
-        use crate::syn::{SyntaxKind, SyntaxToken, SyntaxNode, AstNode};
+        use crate::syn::{SyntaxToken, SyntaxNode, AstNode};
+        use crate::SyntaxKind;
     ";
 
     format!("{}\n{}", header, structs.collect::<String>())
@@ -177,8 +183,6 @@ pub fn generate_syn() {
         .unwrap()
         .parse()
         .unwrap();
-
-    println!("{:#?}", grammar);
 
     let root = Path::new("crates/boring_rpc_syn/src/generated/");
 

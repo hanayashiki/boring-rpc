@@ -1,4 +1,11 @@
 [package]
-name = "boring_rpc_anaylzer"
-version = "0.1.0"
+name = "boring_rpc_analyzer"
+version = "0.0.0"
 edition = "2021"
+
+[dependencies]
+boring_rpc_syn = { version = "0.0.0", path = "../boring_rpc_syn" }
+boring_rpc_parser = { version = "0.0.0", path = "../boring_rpc_parser" }
+
+[dev-dependencies]
+expect-test = "1.5.0"

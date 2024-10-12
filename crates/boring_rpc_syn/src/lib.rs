@@ -1,6 +1,11 @@
-pub(crate) mod generated;
-pub mod syn;
-pub mod syntax_error;
+mod generated;
+mod green_node;
+mod syn;
+mod syntax_error;
 
-pub use syn::{GreenToken, SyntaxKind, SyntaxNode, SyntaxToken};
+pub use generated::syntax_kinds::SyntaxKind;
+pub use generated::{nodes, tokens};
+pub use green_node::{GreenNode, GreenNodeOrToken, GreenToken};
+pub use syn::{SyntaxNode, SyntaxToken};
 pub use text_size::{TextRange, TextSize};
+pub use syntax_error::SyntaxError;

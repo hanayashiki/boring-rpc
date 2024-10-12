@@ -1,5 +1,6 @@
 
-use crate::syn::{AstToken, SyntaxKind, SyntaxToken};
+use crate::syn::{AstToken, SyntaxToken};
+use crate::SyntaxKind;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TypeKeyword {
