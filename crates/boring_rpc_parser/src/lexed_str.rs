@@ -63,10 +63,10 @@ impl<'a> LexedStr<'a> {
                     // TODO: handle exp part
                     tokens.push(GreenToken::new(SyntaxKind::Number, value));
                 }
-                ' ' | '\t' => {
+                ' ' | '\t' | '\n' | '\r' => {
                     let mut value = String::with_capacity(16);
 
-                    while let Some(c @ (' ' | '\t')) = iter.peek().cloned() {
+                    while let Some(c @ (' ' | '\t' | '\n' | '\r')) = iter.peek().cloned() {
                         value.push(c);
                         iter.next();
                     }

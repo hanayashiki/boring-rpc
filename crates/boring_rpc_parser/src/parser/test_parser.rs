@@ -57,6 +57,37 @@ fn type_decl_keyword_as_ident() {
 }
 
 #[test]
+fn type_decl_list() {
+    check(
+        "
+            type A = {}
+            type B = {}
+        ",
+        expect![[r#"
+            Module
+                TypeDecl
+                    TypeKeyword "type"
+                    Ident "A"
+                    Whitespace " "
+                    Equal "="
+                    Whitespace " "
+                    LCurly "{"
+                    FieldList
+                    RCurly "}"
+                TypeDecl
+                    TypeKeyword "type"
+                    Ident "B"
+                    Whitespace " "
+                    Equal "="
+                    Whitespace " "
+                    LCurly "{"
+                    FieldList
+                    RCurly "}"
+        "#]],
+    );
+}
+
+#[test]
 fn type_decl_error() {
     check_error(
         "type A = {",

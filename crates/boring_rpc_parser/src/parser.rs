@@ -111,6 +111,8 @@ impl Parser {
     pub fn parse_module(&mut self) -> GreenNode {
         let mut node = GreenNode::new(SyntaxKind::Module, Vec::new());
         loop {
+            self.eat(SyntaxKind::Whitespace);
+
             match self.peek_keyword() {
                 Some(SyntaxKind::TypeKeyword) => {
                     node.push(Node(self.parse_type_decl()));
@@ -120,8 +122,6 @@ impl Parser {
                     _ => todo!("error handling"),
                 },
             }
-
-            self.eat(SyntaxKind::Whitespace);
         }
 
         node

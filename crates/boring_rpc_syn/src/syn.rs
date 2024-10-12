@@ -1,9 +1,6 @@
-use std::{
-    ptr::NonNull,
-    rc::{Rc, Weak},
-};
+use std::rc::{Rc, Weak};
 
-use crate::{GreenNode, GreenNodeOrToken, GreenToken, SyntaxKind};
+use crate::{GreenNode, GreenNodeOrToken, SyntaxKind};
 
 pub trait AstToken {
     fn can_cast(kind: SyntaxKind) -> bool;
