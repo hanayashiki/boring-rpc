@@ -13,7 +13,7 @@ fn check(input: &str, expect: expect_test::Expect) {
 
 fn check_error(input: &str, expect: expect_test::Expect) {
     let mut p = Parser::of(input);
-    let node = p.parse_module();
+    p.parse_module();
 
     expect.assert_eq(&format!("{:#?}", p.errors));
 }
@@ -34,7 +34,6 @@ fn type_decl_simple() {
                         Equal "="
                         Whitespace " "
                         LCurly "{"
-                        FieldList
                         RCurly "}"
         "#]],
     );
@@ -56,7 +55,6 @@ fn type_decl_keyword_as_ident() {
                         Equal "="
                         Whitespace " "
                         LCurly "{"
-                        FieldList
                         RCurly "}"
         "#]],
     );
@@ -82,7 +80,6 @@ fn type_decl_list() {
                         Equal "="
                         Whitespace " "
                         LCurly "{"
-                        FieldList
                         RCurly "}"
                     Whitespace "\n            "
                     TypeDecl
@@ -94,7 +91,6 @@ fn type_decl_list() {
                         Equal "="
                         Whitespace " "
                         LCurly "{"
-                        FieldList
                         RCurly "}"
                     Whitespace "\n        "
         "#]],
@@ -113,4 +109,94 @@ fn type_decl_error() {
                 ),
             ]"#]],
     );
+}
+
+#[test]
+fn type_decl_fields() {
+    check(
+        "
+            type A = {
+                a: string,
+                b: number,
+            }",
+        expect![[r#"
+            Module
+                Whitespace "\n            "
+                TypeDeclList
+                    TypeDecl
+                        TypeKeyword "type"
+                        Whitespace " "
+                        Name
+                            Ident "A"
+                        Whitespace " "
+                        Equal "="
+                        Whitespace " "
+                        LCurly "{"
+                        Whitespace "\n                "
+                        FieldList
+                            Field
+                                Name
+                                    Ident "a"
+                                Colon ":"
+                                Whitespace " "
+                                TypeExpr
+                                    Name
+                                        Ident "string"
+                            Comma ","
+                            Whitespace "\n                "
+                            Field
+                                Name
+                                    Ident "b"
+                                Colon ":"
+                                Whitespace " "
+                                TypeExpr
+                                    Name
+                                        Ident "number"
+                            Comma ","
+                            Whitespace "\n            "
+                        RCurly "}"
+        "#]],
+    );
+
+    check(
+        "type NoTrailingComma = {
+            a: string,
+            b: number
+        }",
+        expect![[r#"
+            Module
+                TypeDeclList
+                    TypeDecl
+                        TypeKeyword "type"
+                        Whitespace " "
+                        Name
+                            Ident "NoTrailingComma"
+                        Whitespace " "
+                        Equal "="
+                        Whitespace " "
+                        LCurly "{"
+                        Whitespace "\n            "
+                        FieldList
+                            Field
+                                Name
+                                    Ident "a"
+                                Colon ":"
+                                Whitespace " "
+                                TypeExpr
+                                    Name
+                                        Ident "string"
+                            Comma ","
+                            Whitespace "\n            "
+                            Field
+                                Name
+                                    Ident "b"
+                                Colon ":"
+                                Whitespace " "
+                                TypeExpr
+                                    Name
+                                        Ident "number"
+                            Whitespace "\n        "
+                        RCurly "}"
+        "#]],
+    )
 }

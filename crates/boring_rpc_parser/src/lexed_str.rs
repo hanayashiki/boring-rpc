@@ -1,4 +1,4 @@
-use boring_rpc_syn::{SyntaxKind, GreenToken};
+use boring_rpc_syn::{GreenToken, SyntaxKind};
 
 pub struct LexedStr<'a> {
     str: &'a str,
@@ -114,7 +114,7 @@ impl<'a> LexedStr<'a> {
                 }
                 ':' => {
                     iter.next();
-                    tokens.push(GreenToken::new(SyntaxKind::At, ":".to_string()));
+                    tokens.push(GreenToken::new(SyntaxKind::Colon, ":".to_string()));
                 }
                 _ => {
                     iter.next();
@@ -137,9 +137,10 @@ impl<'a> LexedStr<'a> {
 mod tests {
     use super::*;
 
-    fn test_lexed_str(input: &str, expected: Vec<GreenToken>) {
+    fn test_lexed_str(input: &str, mut expected: Vec<GreenToken>) {
         let result = LexedStr::new(input).tokens;
 
+        expected.push(GreenToken::new(SyntaxKind::EOF, "".to_string()));
         assert_eq!(result, expected);
     }
 
@@ -157,9 +158,10 @@ mod tests {
 
         test_lexed_str(
             "yaju114514_$",
-            vec![
-                GreenToken::new(SyntaxKind::Ident, "yaju114514_$".to_string()),
-            ],
+            vec![GreenToken::new(
+                SyntaxKind::Ident,
+                "yaju114514_$".to_string(),
+            )],
         );
     }
 
@@ -172,7 +174,10 @@ mod tests {
 
         test_lexed_str(
             "912.3456789",
-            vec![GreenToken::new(SyntaxKind::Number, "912.3456789".to_string())],
+            vec![GreenToken::new(
+                SyntaxKind::Number,
+                "912.3456789".to_string(),
+            )],
         );
 
         test_lexed_str(

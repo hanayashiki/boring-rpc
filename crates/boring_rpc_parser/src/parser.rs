@@ -21,6 +21,11 @@ impl Parser {
         return p;
     }
 
+    fn peek(&self) -> &GreenToken {
+        &self.tokens[self.pos]
+    }
+
+    /// If the peeked token matches `kind`, consume and return it. Otherwise, return None.
     pub fn eat(&mut self, kind: SyntaxKind) -> Option<GreenToken> {
         let token = self.peek();
         if token.kind() == kind {
@@ -42,10 +47,6 @@ impl Parser {
         }
     }
 
-    fn peek(&self) -> &GreenToken {
-        &self.tokens[self.pos]
-    }
-
     fn range_of(&self, pos: usize) -> TextRange {
         let mut offset = TextSize::new(0);
         for i in 0..pos {
@@ -59,6 +60,8 @@ impl Parser {
         self.range_of(self.pos)
     }
 
+    /// Peek the next token and return it if it matches one of the keyword
+    /// This allows treating keywords only when we need to, allowing the freedom of naming ids.
     fn peek_keyword(&self) -> Option<SyntaxKind> {
         match self.peek().kind() {
             SyntaxKind::Ident => match self.peek().value() {
@@ -165,7 +168,9 @@ impl Parser {
             self.expect_push(node, SyntaxKind::LCurly);
             self.eat_push(node, SyntaxKind::Whitespace);
 
-            node.push(Node(self.parse_field_list()));
+            if let SyntaxKind::Hash | SyntaxKind::At | SyntaxKind::Ident = self.peek().kind() {
+                node.push(Node(self.parse_field_list()))
+            }
 
             self.expect_push(node, SyntaxKind::RCurly);
         }
@@ -174,8 +179,46 @@ impl Parser {
     }
 
     fn parse_field_list(&mut self) -> GreenNode {
-        // TODO
-        GreenNode::new(SyntaxKind::FieldList, Vec::new())
+        let mut node = GreenNode::new(SyntaxKind::FieldList, Vec::new());
+        {
+            let node = &mut node;
+
+            // TODO: macros and decorators
+            loop {
+                match self.peek().kind() {
+                    SyntaxKind::Ident => {
+                        node.push(Node(self.parse_field()));
+
+                        self.eat_push(node, SyntaxKind::Whitespace);
+                        self.eat_push(node, SyntaxKind::Comma);
+                        self.eat_push(node, SyntaxKind::Whitespace);
+                    }
+                    _ => break,
+                }
+            }
+        }
+
+        node
+    }
+
+    fn parse_field(&mut self) -> GreenNode {
+        assert!(self.peek().kind() == SyntaxKind::Ident);
+
+        let mut node = GreenNode::new(SyntaxKind::Field, vec![]);
+        {
+            let node = &mut node;
+
+            // field_name
+            node.push(Node(self.parse_name()));
+
+            self.eat_push(node, SyntaxKind::Whitespace);
+            self.expect_push(node, SyntaxKind::Colon);
+            // field_type
+            self.eat_push(node, SyntaxKind::Whitespace);
+            node.push(Node(self.parse_type_expr()));
+        }
+
+        node
     }
 
     fn parse_name(&mut self) -> GreenNode {
@@ -183,5 +226,10 @@ impl Parser {
             SyntaxKind::Name,
             vec![Token(self.eat(SyntaxKind::Ident).unwrap())],
         )
+    }
+
+    fn parse_type_expr(&mut self) -> GreenNode {
+        // FIXME: other type exprs
+        GreenNode::new(SyntaxKind::TypeExpr, vec![Node(self.parse_name())])
     }
 }

@@ -1,6 +1,5 @@
 use crate::SyntaxKind;
 
-
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct GreenToken {
     kind: SyntaxKind,
@@ -28,17 +27,12 @@ impl GreenToken {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct GreenNode {
     kind: SyntaxKind,
-    width: u32,
     children: Vec<GreenNodeOrToken>,
 }
 
 impl GreenNode {
     pub fn new(kind: SyntaxKind, children: Vec<GreenNodeOrToken>) -> Self {
-        Self {
-            kind,
-            width: children.iter().map(|c| c.width()).sum(),
-            children,
-        }
+        Self { kind, children }
     }
 
     pub fn kind(&self) -> SyntaxKind {
@@ -85,7 +79,7 @@ impl GreenNodeOrToken {
 
     pub fn width(&self) -> u32 {
         match self {
-            GreenNodeOrToken::Node(node) => node.width,
+            GreenNodeOrToken::Node(node) => node.children.iter().map(|c| c.width()).sum(),
             GreenNodeOrToken::Token(token) => token.value.len() as u32,
         }
     }

@@ -1,1 +1,5 @@
-{}
+{
+    "rust-analyzer.runnables.extraEnv": {
+        "UPDATE_EXPECT": "1"
+    }
+}

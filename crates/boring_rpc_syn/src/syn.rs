@@ -61,14 +61,17 @@ impl SyntaxNode {
         self.green_node().children()
     }
 
-    pub fn root<T>(green_node: *const GreenNode) -> Option<T>
+    pub fn root<T>(green_node: GreenNode) -> Option<T>
     where
         T: AstNode,
     {
+        let root = Box::new(green_node);
+
         T::cast(Self(Rc::new(SyntaxNodeInner {
             offset: 0,
-            green_node,
+            green_node: &*root as *const _,
             parent: Weak::new(),
+            root_green_node: Some(root),
         })))
     }
 
@@ -123,6 +126,7 @@ impl SyntaxNode {
                         offset: cur_offset,
                         green_node: green_node as *const _,
                         parent: Rc::<SyntaxNodeInner>::downgrade(&self.0),
+                        root_green_node: None,
                     }));
 
                     return T::cast(n);
@@ -154,6 +158,7 @@ impl SyntaxNode {
                             offset,
                             green_node: green_node as *const _,
                             parent: Rc::<SyntaxNodeInner>::downgrade(&self.0),
+                            root_green_node: None,
                         }));
 
                         T::cast(n)
@@ -170,4 +175,6 @@ struct SyntaxNodeInner {
     offset: u32,
     green_node: *const GreenNode,
     parent: Weak<SyntaxNodeInner>,
+    // Owned by the root
+    root_green_node: Option<Box<GreenNode>>,
 }
