@@ -1,6 +1,8 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, default};
 
-#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+use boring_rpc_syn::TextRange;
+
+#[derive(Hash, Eq, PartialEq, Debug, Clone, Default)]
 pub struct ModuleId(String);
 
 impl ModuleId {
@@ -9,9 +11,25 @@ impl ModuleId {
     }
 }
 
-#[derive(Debug)]
+#[derive(Hash, Eq, PartialEq, Debug, Default, Clone)]
+pub enum TypeDeclKind {
+    #[default]
+    Type,
+    Service,
+}
+
+#[derive(Hash, Eq, PartialEq, Debug, Default, Clone)]
+pub struct TypeDecl {
+    pub name: String,
+    pub kind: TypeDeclKind,
+
+    pub range: TextRange,
+}
+
+#[derive(Debug, Default)]
 pub struct Module {
-    pub(crate) module_id: ModuleId,
+    pub module_id: ModuleId,
+    pub type_decls: BTreeMap<String, TypeDecl>,
 }
 
 #[derive(Debug, Default)]

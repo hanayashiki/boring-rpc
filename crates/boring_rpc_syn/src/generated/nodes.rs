@@ -1,6 +1,6 @@
 
 use crate::syn::{AstNode, SyntaxNode, SyntaxToken};
-use crate::SyntaxKind;
+use crate::{tokens::*, SyntaxKind};
 
 #[derive(Debug, Clone)]
 pub struct Name {
@@ -22,8 +22,8 @@ impl AstNode for Name {
     }
 }
 impl Name {
-    pub fn ident(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn ident(&self) -> Option<Ident> {
+        self.syntax().cast_token::<Ident>()
     }
 }
 
@@ -87,8 +87,8 @@ impl AstNode for StringLiteral {
     }
 }
 impl StringLiteral {
-    pub fn string(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn string(&self) -> Option<String> {
+        self.syntax().cast_token::<String>()
     }
 }
 
@@ -112,8 +112,8 @@ impl AstNode for NumberLiteral {
     }
 }
 impl NumberLiteral {
-    pub fn number(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn number(&self) -> Option<Number> {
+        self.syntax().cast_token::<Number>()
     }
 }
 
@@ -137,11 +137,11 @@ impl AstNode for BooleanLiteral {
     }
 }
 impl BooleanLiteral {
-    pub fn false_keyword(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn false_keyword(&self) -> Option<FalseKeyword> {
+        self.syntax().cast_token::<FalseKeyword>()
     }
-    pub fn true_keyword(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn true_keyword(&self) -> Option<TrueKeyword> {
+        self.syntax().cast_token::<TrueKeyword>()
     }
 }
 
@@ -165,8 +165,8 @@ impl AstNode for NullLiteral {
     }
 }
 impl NullLiteral {
-    pub fn null_keyword(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn null_keyword(&self) -> Option<NullKeyword> {
+        self.syntax().cast_token::<NullKeyword>()
     }
 }
 
@@ -193,11 +193,11 @@ impl ArrayLiteral {
     pub fn literal_list(&self) -> Option<LiteralList> {
         self.syntax().cast_child::<LiteralList>()
     }
-    pub fn l_bracket(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn l_bracket(&self) -> Option<LBracket> {
+        self.syntax().cast_token::<LBracket>()
     }
-    pub fn r_bracket(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn r_bracket(&self) -> Option<RBracket> {
+        self.syntax().cast_token::<RBracket>()
     }
 }
 
@@ -224,11 +224,11 @@ impl ObjectLiteral {
     pub fn literal_field_list(&self) -> Option<LiteralFieldList> {
         self.syntax().cast_child::<LiteralFieldList>()
     }
-    pub fn l_curly(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn l_curly(&self) -> Option<LCurly> {
+        self.syntax().cast_token::<LCurly>()
     }
-    pub fn r_curly(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn r_curly(&self) -> Option<RCurly> {
+        self.syntax().cast_token::<RCurly>()
     }
 }
 
@@ -252,8 +252,8 @@ impl AstNode for LiteralList {
     }
 }
 impl LiteralList {
-    pub fn comma(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn comma(&self) -> Option<Comma> {
+        self.syntax().cast_token::<Comma>()
     }
     pub fn literals(&self) -> Vec<Literal> {
         self.syntax().cast_children::<Literal>()
@@ -280,8 +280,8 @@ impl AstNode for LiteralFieldList {
     }
 }
 impl LiteralFieldList {
-    pub fn comma(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn comma(&self) -> Option<Comma> {
+        self.syntax().cast_token::<Comma>()
     }
     pub fn literal_fields(&self) -> Vec<LiteralField> {
         self.syntax().cast_children::<LiteralField>()
@@ -308,8 +308,8 @@ impl AstNode for LiteralField {
     }
 }
 impl LiteralField {
-    pub fn colon(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn colon(&self) -> Option<Colon> {
+        self.syntax().cast_token::<Colon>()
     }
     pub fn key(&self) -> Option<Name> {
         self.syntax().cast_child::<Name>()
@@ -339,8 +339,8 @@ impl AstNode for TypeDecl {
     }
 }
 impl TypeDecl {
-    pub fn equal(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn equal(&self) -> Option<Equal> {
+        self.syntax().cast_token::<Equal>()
     }
     pub fn field_list(&self) -> Option<FieldList> {
         self.syntax().cast_child::<FieldList>()
@@ -348,14 +348,14 @@ impl TypeDecl {
     pub fn name(&self) -> Option<Name> {
         self.syntax().cast_child::<Name>()
     }
-    pub fn type_keyword(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn type_keyword(&self) -> Option<TypeKeyword> {
+        self.syntax().cast_token::<TypeKeyword>()
     }
-    pub fn l_curly(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn l_curly(&self) -> Option<LCurly> {
+        self.syntax().cast_token::<LCurly>()
     }
-    pub fn r_curly(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn r_curly(&self) -> Option<RCurly> {
+        self.syntax().cast_token::<RCurly>()
     }
 }
 
@@ -379,8 +379,8 @@ impl AstNode for FieldList {
     }
 }
 impl FieldList {
-    pub fn comma(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn comma(&self) -> Option<Comma> {
+        self.syntax().cast_token::<Comma>()
     }
     pub fn fields(&self) -> Vec<Field> {
         self.syntax().cast_children::<Field>()
@@ -438,11 +438,11 @@ impl TypeArray {
     pub fn type_expr(&self) -> Option<TypeExpr> {
         self.syntax().cast_child::<TypeExpr>()
     }
-    pub fn l_bracket(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn l_bracket(&self) -> Option<LBracket> {
+        self.syntax().cast_token::<LBracket>()
     }
-    pub fn r_bracket(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn r_bracket(&self) -> Option<RBracket> {
+        self.syntax().cast_token::<RBracket>()
     }
 }
 
@@ -466,8 +466,8 @@ impl AstNode for Field {
     }
 }
 impl Field {
-    pub fn colon(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn colon(&self) -> Option<Colon> {
+        self.syntax().cast_token::<Colon>()
     }
     pub fn decorator_attrs(&self) -> Option<DecoratorAttrs> {
         self.syntax().cast_child::<DecoratorAttrs>()
@@ -553,14 +553,14 @@ impl AstNode for MacroAttr {
     }
 }
 impl MacroAttr {
-    pub fn hash(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn hash(&self) -> Option<Hash> {
+        self.syntax().cast_token::<Hash>()
     }
-    pub fn l_parenthesis(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn l_parenthesis(&self) -> Option<LParenthesis> {
+        self.syntax().cast_token::<LParenthesis>()
     }
-    pub fn r_parenthesis(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn r_parenthesis(&self) -> Option<RParenthesis> {
+        self.syntax().cast_token::<RParenthesis>()
     }
     pub fn literal_list(&self) -> Option<LiteralList> {
         self.syntax().cast_child::<LiteralList>()
@@ -590,14 +590,14 @@ impl AstNode for DecoratorAttr {
     }
 }
 impl DecoratorAttr {
-    pub fn l_parenthesis(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn l_parenthesis(&self) -> Option<LParenthesis> {
+        self.syntax().cast_token::<LParenthesis>()
     }
-    pub fn r_parenthesis(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn r_parenthesis(&self) -> Option<RParenthesis> {
+        self.syntax().cast_token::<RParenthesis>()
     }
-    pub fn at(&self) -> Option<SyntaxToken> {
-        todo![]
+    pub fn at(&self) -> Option<At> {
+        self.syntax().cast_token::<At>()
     }
     pub fn literal_list(&self) -> Option<LiteralList> {
         self.syntax().cast_child::<LiteralList>()

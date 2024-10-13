@@ -1,6 +1,5 @@
 use boring_rpc_syn::{
-    tokens::Whitespace, GreenNode, GreenNodeOrToken::*, GreenToken, SyntaxError, SyntaxKind,
-    TextRange, TextSize,
+    GreenNode, GreenNodeOrToken::*, GreenToken, SyntaxError, SyntaxKind, TextRange, TextSize,
 };
 
 use crate::lexed_str::LexedStr;
@@ -149,13 +148,17 @@ impl Parser {
         let type_kw = self.eat_keyword().unwrap();
         assert!(type_kw.kind() == SyntaxKind::TypeKeyword);
 
-        self.eat(SyntaxKind::Whitespace);
-
         let mut node = GreenNode::new(SyntaxKind::TypeDecl, vec![Token(type_kw)]);
+
         {
             let node = &mut node;
 
-            self.expect_push(node, SyntaxKind::Ident);
+            self.eat_push(node, SyntaxKind::Whitespace);
+
+            if self.peek().kind() == SyntaxKind::Ident {
+                node.push(Node(self.parse_name()));
+            }
+
             self.eat_push(node, SyntaxKind::Whitespace);
             self.expect_push(node, SyntaxKind::Equal);
             self.eat_push(node, SyntaxKind::Whitespace);
@@ -173,5 +176,12 @@ impl Parser {
     fn parse_field_list(&mut self) -> GreenNode {
         // TODO
         GreenNode::new(SyntaxKind::FieldList, Vec::new())
+    }
+
+    fn parse_name(&mut self) -> GreenNode {
+        GreenNode::new(
+            SyntaxKind::Name,
+            vec![Token(self.eat(SyntaxKind::Ident).unwrap())],
+        )
     }
 }

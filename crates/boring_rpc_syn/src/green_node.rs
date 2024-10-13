@@ -28,7 +28,7 @@ impl GreenToken {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct GreenNode {
     kind: SyntaxKind,
-    width: usize,
+    width: u32,
     children: Vec<GreenNodeOrToken>,
 }
 
@@ -83,10 +83,10 @@ impl GreenNodeOrToken {
         Ok(())
     }
 
-    pub fn width(&self) -> usize {
+    pub fn width(&self) -> u32 {
         match self {
             GreenNodeOrToken::Node(node) => node.width,
-            GreenNodeOrToken::Token(token) => token.value.len(),
+            GreenNodeOrToken::Token(token) => token.value.len() as u32,
         }
     }
 }

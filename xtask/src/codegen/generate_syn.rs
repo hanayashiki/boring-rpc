@@ -89,7 +89,7 @@ fn generate_tokens_rs() -> String {
 
     let header = "
         use crate::syn::{AstToken, SyntaxToken};
-        use crate::SyntaxKind;
+        use crate::{SyntaxKind};
     ";
 
     format!("{}\n{}", header, structs.collect::<String>())
@@ -111,10 +111,11 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
                     .expect(format!("{} is not a valid token", token_ungram_name).as_str())
                     .1;
                 let name = format_ident!("{}", utils::to_lower_snake_case(struct_name));
+                let ty = format_ident!("{}", struct_name);
 
                 quote! {
-                    pub fn #name(&self) -> Option<SyntaxToken> {
-                        todo![]
+                    pub fn #name(&self) -> Option<#ty> {
+                        self.syntax().cast_token::<#ty>()
                     }
                 }
             }
@@ -132,15 +133,13 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
                 if *many {
                     quote! {
                         pub fn #name(&self) -> Vec<#ty> {
-                            self.syntax()
-                                .cast_children::<#ty>()
+                            self.syntax().cast_children::<#ty>()
                         }
                     }
                 } else {
                     quote! {
                         pub fn #name(&self) -> Option<#ty> {
-                            self.syntax()
-                                .cast_child::<#ty>()
+                            self.syntax().cast_child::<#ty>()
                         }
                     }
                 }
@@ -172,7 +171,7 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
 
     let header = "
         use crate::syn::{SyntaxToken, SyntaxNode, AstNode};
-        use crate::SyntaxKind;
+        use crate::{SyntaxKind, tokens::*};
     ";
 
     format!("{}\n{}", header, structs.collect::<String>())

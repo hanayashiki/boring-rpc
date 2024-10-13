@@ -63,8 +63,11 @@ enum FileType {
     Unknown,
 }
 
+// Scalar
+scalar HttpURL
+
 // Union Types
-type Message = TextMessage | FileMessage;
+union Message = TextMessage | FileMessage;
 
 // Procedure Macros
 //

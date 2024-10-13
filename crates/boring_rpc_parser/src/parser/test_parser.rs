@@ -27,7 +27,9 @@ fn type_decl_simple() {
                 TypeDeclList
                     TypeDecl
                         TypeKeyword "type"
-                        Ident "A"
+                        Whitespace " "
+                        Name
+                            Ident "A"
                         Whitespace " "
                         Equal "="
                         Whitespace " "
@@ -47,7 +49,9 @@ fn type_decl_keyword_as_ident() {
                 TypeDeclList
                     TypeDecl
                         TypeKeyword "type"
-                        Ident "type"
+                        Whitespace " "
+                        Name
+                            Ident "type"
                         Whitespace " "
                         Equal "="
                         Whitespace " "
@@ -71,7 +75,9 @@ fn type_decl_list() {
                 TypeDeclList
                     TypeDecl
                         TypeKeyword "type"
-                        Ident "A"
+                        Whitespace " "
+                        Name
+                            Ident "A"
                         Whitespace " "
                         Equal "="
                         Whitespace " "
@@ -81,7 +87,9 @@ fn type_decl_list() {
                     Whitespace "\n            "
                     TypeDecl
                         TypeKeyword "type"
-                        Ident "B"
+                        Whitespace " "
+                        Name
+                            Ident "B"
                         Whitespace " "
                         Equal "="
                         Whitespace " "

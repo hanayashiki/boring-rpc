@@ -1,5 +1,7 @@
 use std::rc::{Rc, Weak};
 
+use text_size::TextRange;
+
 use crate::{GreenNode, GreenNodeOrToken, SyntaxKind};
 
 pub trait AstToken {
@@ -20,13 +22,13 @@ pub trait AstNode {
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct SyntaxToken {
-    offset: usize,
+    offset: u32,
     kind: SyntaxKind,
     value: String,
 }
 
 impl SyntaxToken {
-    pub fn new(offset: usize, kind: SyntaxKind, value: String) -> Self {
+    pub fn new(offset: u32, kind: SyntaxKind, value: String) -> Self {
         Self {
             offset,
             kind,
@@ -34,7 +36,7 @@ impl SyntaxToken {
         }
     }
 
-    pub fn offset(&self) -> usize {
+    pub fn offset(&self) -> u32 {
         self.offset
     }
 
@@ -70,8 +72,14 @@ impl SyntaxNode {
         })))
     }
 
-    pub fn offset(&self) -> usize {
+    pub fn offset(&self) -> u32 {
         self.0.offset
+    }
+
+    pub fn range(&self) -> TextRange {
+        let start = self.offset();
+        let end = start + self.green_node_children().iter().map(|it| it.width()).sum::<u32>();
+        TextRange::new(start.into(), end.into())
     }
 
     pub fn kind(&self) -> SyntaxKind {
@@ -159,7 +167,7 @@ impl SyntaxNode {
 
 #[derive(Debug)]
 struct SyntaxNodeInner {
-    offset: usize,
+    offset: u32,
     green_node: *const GreenNode,
     parent: Weak<SyntaxNodeInner>,
 }
