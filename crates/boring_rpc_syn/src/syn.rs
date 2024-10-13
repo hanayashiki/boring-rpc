@@ -81,7 +81,12 @@ impl SyntaxNode {
 
     pub fn range(&self) -> TextRange {
         let start = self.offset();
-        let end = start + self.green_node_children().iter().map(|it| it.width()).sum::<u32>();
+        let end = start
+            + self
+                .green_node_children()
+                .iter()
+                .map(|it| it.width())
+                .sum::<u32>();
         TextRange::new(start.into(), end.into())
     }
 
@@ -175,6 +180,8 @@ struct SyntaxNodeInner {
     offset: u32,
     green_node: *const GreenNode,
     parent: Weak<SyntaxNodeInner>,
-    // Owned by the root
+
+    /// Owned by the root, making sure `green_node` is valid.
+    #[allow(dead_code)]
     root_green_node: Option<Box<GreenNode>>,
 }
