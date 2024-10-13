@@ -24,15 +24,16 @@ fn type_decl_simple() {
         "type A = {}",
         expect![[r#"
             Module
-                TypeDecl
-                    TypeKeyword "type"
-                    Ident "A"
-                    Whitespace " "
-                    Equal "="
-                    Whitespace " "
-                    LCurly "{"
-                    FieldList
-                    RCurly "}"
+                TypeDeclList
+                    TypeDecl
+                        TypeKeyword "type"
+                        Ident "A"
+                        Whitespace " "
+                        Equal "="
+                        Whitespace " "
+                        LCurly "{"
+                        FieldList
+                        RCurly "}"
         "#]],
     );
 }
@@ -43,15 +44,16 @@ fn type_decl_keyword_as_ident() {
         "type type = {}",
         expect![[r#"
             Module
-                TypeDecl
-                    TypeKeyword "type"
-                    Ident "type"
-                    Whitespace " "
-                    Equal "="
-                    Whitespace " "
-                    LCurly "{"
-                    FieldList
-                    RCurly "}"
+                TypeDeclList
+                    TypeDecl
+                        TypeKeyword "type"
+                        Ident "type"
+                        Whitespace " "
+                        Equal "="
+                        Whitespace " "
+                        LCurly "{"
+                        FieldList
+                        RCurly "}"
         "#]],
     );
 }
@@ -65,24 +67,28 @@ fn type_decl_list() {
         ",
         expect![[r#"
             Module
-                TypeDecl
-                    TypeKeyword "type"
-                    Ident "A"
-                    Whitespace " "
-                    Equal "="
-                    Whitespace " "
-                    LCurly "{"
-                    FieldList
-                    RCurly "}"
-                TypeDecl
-                    TypeKeyword "type"
-                    Ident "B"
-                    Whitespace " "
-                    Equal "="
-                    Whitespace " "
-                    LCurly "{"
-                    FieldList
-                    RCurly "}"
+                Whitespace "\n            "
+                TypeDeclList
+                    TypeDecl
+                        TypeKeyword "type"
+                        Ident "A"
+                        Whitespace " "
+                        Equal "="
+                        Whitespace " "
+                        LCurly "{"
+                        FieldList
+                        RCurly "}"
+                    Whitespace "\n            "
+                    TypeDecl
+                        TypeKeyword "type"
+                        Ident "B"
+                        Whitespace " "
+                        Equal "="
+                        Whitespace " "
+                        LCurly "{"
+                        FieldList
+                        RCurly "}"
+                    Whitespace "\n        "
         "#]],
     );
 }
