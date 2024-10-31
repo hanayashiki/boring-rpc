@@ -1,15 +1,13 @@
-use boring_rpc_syn::GreenNodeOrToken;
 use expect_test::expect;
 
-use super::analyze_inline;
+use crate::semantic_store::SemanticStore;
 
 fn check(input: &str, expect: expect_test::Expect) {
-    let mut p = analyze_inline(input);
+    let mut p = SemanticStore::inline_module(input);
     expect.assert_eq(&format!("{:#?}", p));
 }
-
 #[test]
-fn type_simple_module() {
+fn test_simple() {
     check(
         "type A = {}",
         expect![[r#"
@@ -17,13 +15,17 @@ fn type_simple_module() {
                 module_id: ModuleId(
                     "inline",
                 ),
-                type_decls: {
-                    "A": TypeDecl {
+                type_decls: [
+                    TypeDecl {
                         name: "A",
                         kind: Type,
-                        range: 0..11,
+                        syntax_node_id: SyntaxNodeId {
+                            kind: TypeDecl,
+                            offset: 0,
+                        },
+                        fields: [],
                     },
-                },
+                ],
             }"#]],
     );
 }

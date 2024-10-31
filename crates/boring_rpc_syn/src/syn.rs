@@ -4,6 +4,12 @@ use text_size::TextRange;
 
 use crate::{GreenNode, GreenNodeOrToken, SyntaxKind};
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct SyntaxNodeId {
+    pub kind: SyntaxKind,
+    pub offset: u32,
+}
+
 pub trait AstToken {
     fn can_cast(kind: SyntaxKind) -> bool;
     fn cast(syntax: SyntaxToken) -> Option<Self>
@@ -172,6 +178,13 @@ impl SyntaxNode {
                 }
             })
             .collect::<Vec<_>>()
+    }
+
+    pub fn id(&self) -> SyntaxNodeId {
+        SyntaxNodeId {
+            kind: self.kind(),
+            offset: self.offset(),
+        }
     }
 }
 

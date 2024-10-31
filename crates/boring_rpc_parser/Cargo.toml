@@ -4,7 +4,7 @@ version = "0.0.0"
 edition = "2021"
 
 [dependencies]
-boring_rpc_syn = { version = "0.0.0", path = "../boring_rpc_syn" }
+boring_rpc_syn = { path = "../boring_rpc_syn" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.128"
 

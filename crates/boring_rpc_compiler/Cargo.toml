@@ -1,0 +1,12 @@
+[package]
+name = "boring_rpc_compiler"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+boring_rpc_syn = { path = "../boring_rpc_syn" }
+boring_rpc_vfs = { path = "../boring_rpc_vfs" }
+boring_rpc_analyzer = { path = "../boring_rpc_analyzer" }
+
+[dev-dependencies]
+expect-test = "1.5.0"

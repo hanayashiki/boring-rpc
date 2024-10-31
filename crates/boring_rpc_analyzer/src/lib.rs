@@ -1,2 +1,2 @@
-pub mod analyzer;
-pub mod store;
+pub mod semantic_store;
+pub mod type_store;

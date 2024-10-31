@@ -18,6 +18,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "boring_rpc_compiler"
+version = "0.0.1"
+dependencies = [
+ "boring_rpc_analyzer",
+ "boring_rpc_syn",
+ "boring_rpc_vfs",
+ "expect-test",
+]
+
+[[package]]
 name = "boring_rpc_parser"
 version = "0.0.0"
 dependencies = [
@@ -34,6 +44,10 @@ dependencies = [
  "text-size",
  "ungrammar",
 ]
+
+[[package]]
+name = "boring_rpc_vfs"
+version = "0.1.0"
 
 [[package]]
 name = "dissimilar"

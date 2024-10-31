@@ -49,9 +49,9 @@ type TextMessage = {
 }
 
 type FileMessage = {
-    id: i64,
+    id: number,
     fileUrl: URL,
-    fileSize: u64,
+    fileSize: number,
     fileType: FileType,
     created: Date,
 }
