@@ -53,8 +53,8 @@ pub enum TypeExprNode {
 
 #[derive(Debug, Clone)]
 pub struct Module {
-    pub module_id: ModuleId,
-    pub type_decls: Vec<TypeDecl>,
+    pub(crate) module_id: ModuleId,
+    pub(crate) type_decls: Vec<TypeDecl>,
 }
 
 #[derive(Debug, Default)]
@@ -132,6 +132,10 @@ impl SemanticStore {
                     .map_or("#default_name".into(), |n| n.syntax().value().to_string())
             })),
         }
+    }
+
+    pub fn get_module(&self, module_id: ModuleId) -> Option<&Module> {
+        self.modules.get(&module_id)
     }
 
     pub fn inline_module(text: &str) -> Module {

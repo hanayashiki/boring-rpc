@@ -1,20 +1,34 @@
-use std::collections::{BTreeMap, HashSet};
+use std::{collections::{BTreeMap, HashSet}, slice::Iter};
 
-use crate::semantic_store::{ModuleId, TypeDecl};
+use crate::semantic_store;
 
 #[cfg(test)]
-mod test_type_store;
+mod test_infer_type_decl;
+
+#[cfg(test)]
+mod test_infer_module;
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct TypeId {
-    module_id: ModuleId,
+    module_id: semantic_store::ModuleId,
     name: String,
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct Type {
-    name: String,
-    fields: Vec<(String, TypeRef)>,
+    pub name: String,
+    pub fields: Vec<(String, TypeRef)>,
+}
+
+#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+pub struct Module {
+    types: Vec<Type>,
+}
+
+impl Module {
+    pub fn iter_types(&self) -> Iter<'_, Type> {
+        self.types.iter()
+    }
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
@@ -36,7 +50,7 @@ pub struct TypeStore {
 }
 
 impl TypeStore {
-    pub fn infer_type_decl(&mut self, type_decl: &TypeDecl) -> Type {
+    pub fn infer_type_decl(&mut self, type_decl: &semantic_store::TypeDecl) -> Type {
         let mut names = HashSet::<&String>::new();
 
         Type {
@@ -60,6 +74,27 @@ impl TypeStore {
                         }
                     }
                 })
+                .collect(),
+        }
+    }
+
+    pub fn infer_module(&mut self, module: &semantic_store::Module) -> Module {
+        let mut names = HashSet::<&String>::new();
+
+        Module {
+            types: module
+                .type_decls
+                .iter()
+                .map(|type_decl| {
+                    if names.contains(&type_decl.name) {
+                        None
+                    } else {
+                        names.insert(&type_decl.name);
+
+                        Some(self.infer_type_decl(type_decl))
+                    }
+                })
+                .filter_map(|x| x)
                 .collect(),
         }
     }
