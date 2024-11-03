@@ -6,6 +6,7 @@ pub mod rust_printer;
 pub mod typescript_printer;
 
 pub use typescript_printer::TypeScriptPrinter;
+pub use rust_printer::RustPrinter;
 
 pub trait Printer {
     fn write(&self, writer: &mut dyn Write, module: &type_store::Module) -> Result<()>;
