@@ -26,12 +26,17 @@ fn test_simple() {
         type A = {
             a: string,
             b: string,
-        }",
+        }
+        
+        type B = {}
+        ",
         expect![[r#"
             export interface A {
                 a: string, 
                 b: string,
             }
+
+            export interface B {}
 
         "#]],
     );

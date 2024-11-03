@@ -22,13 +22,7 @@ pub struct Type {
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct Module {
-    types: Vec<Type>,
-}
-
-impl Module {
-    pub fn iter_types(&self) -> Iter<'_, Type> {
-        self.types.iter()
-    }
+    pub types: Vec<Type>,
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
