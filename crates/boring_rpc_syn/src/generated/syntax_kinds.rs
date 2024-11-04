@@ -9,6 +9,10 @@ pub enum SyntaxKind {
     #[doc = r"token kind"]
     NullKeyword,
     #[doc = r"token kind"]
+    ImportKeyword,
+    #[doc = r"token kind"]
+    FromKeyword,
+    #[doc = r"token kind"]
     Ident,
     #[doc = r"token kind"]
     String,
@@ -89,7 +93,19 @@ pub enum SyntaxKind {
     #[doc = r"node kind"]
     Module,
     #[doc = r"node kind"]
-    TypeDeclList,
+    StatementList,
+    #[doc = r"node kind"]
+    Statement,
+    #[doc = r"node kind"]
+    ImportDecl,
+    #[doc = r"node kind"]
+    ImportBody,
+    #[doc = r"node kind"]
+    ImportSource,
+    #[doc = r"node kind"]
+    ImportSpecifierList,
+    #[doc = r"node kind"]
+    ImportSpecifier,
 }
 impl SyntaxKind {
     pub fn to_ungram_name(&self) -> &'static str {
@@ -98,6 +114,8 @@ impl SyntaxKind {
             SyntaxKind::TrueKeyword => "true",
             SyntaxKind::FalseKeyword => "false",
             SyntaxKind::NullKeyword => "null",
+            SyntaxKind::ImportKeyword => "import",
+            SyntaxKind::FromKeyword => "from",
             SyntaxKind::Ident => "#ident",
             SyntaxKind::String => "#string",
             SyntaxKind::Number => "#number",
@@ -138,7 +156,13 @@ impl SyntaxKind {
             SyntaxKind::MacroAttr => "MacroAttr",
             SyntaxKind::DecoratorAttr => "DecoratorAttr",
             SyntaxKind::Module => "Module",
-            SyntaxKind::TypeDeclList => "TypeDeclList",
+            SyntaxKind::StatementList => "StatementList",
+            SyntaxKind::Statement => "Statement",
+            SyntaxKind::ImportDecl => "ImportDecl",
+            SyntaxKind::ImportBody => "ImportBody",
+            SyntaxKind::ImportSource => "ImportSource",
+            SyntaxKind::ImportSpecifierList => "ImportSpecifierList",
+            SyntaxKind::ImportSpecifier => "ImportSpecifier",
         }
     }
 }

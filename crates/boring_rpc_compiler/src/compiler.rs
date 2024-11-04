@@ -1,10 +1,11 @@
-use std::path::PathBuf;
+use std::{path::PathBuf, rc::Rc};
 
 use boring_rpc_analyzer::{
     semantic_store::{ModuleId, SemanticStore},
     type_store::TypeStore,
 };
 use boring_rpc_parser::parser::Parser;
+use boring_rpc_resolver::Resolver;
 use boring_rpc_syn::{nodes, SyntaxNode};
 use boring_rpc_vfs::{mem_fs::MemFs, vfs::Vfs};
 
@@ -19,7 +20,8 @@ pub struct CompilerOptions {
 }
 
 pub struct Compiler<V: Vfs> {
-    vfs: V,
+    vfs: Rc<V>,
+    resolver: Resolver<V>,
     semantic_store: SemanticStore,
     type_store: TypeStore,
     options: CompilerOptions,
@@ -32,8 +34,13 @@ pub struct CompilationResult {
 
 impl<V: Vfs> Compiler<V> {
     pub fn in_mem(vfs: MemFs, options: CompilerOptions) -> Compiler<MemFs> {
+        let vfs = Rc::new(vfs);
+
+        let root = options.entry_point.parent().unwrap();
+
         Compiler::<MemFs> {
-            vfs,
+            vfs: vfs.clone(),
+            resolver: Resolver::new(vfs.clone(), root.into()),
             semantic_store: SemanticStore::default(),
             type_store: TypeStore::default(),
             options,
@@ -41,7 +48,7 @@ impl<V: Vfs> Compiler<V> {
     }
 
     fn compile(&mut self) -> CompilationResult {
-        let entry_point_content: String =
+        let entry_point_content =
             String::from_utf8(self.vfs.read(&self.options.entry_point).unwrap()).unwrap();
 
         let mut parser = Parser::of(&entry_point_content);

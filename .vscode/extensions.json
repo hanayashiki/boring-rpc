@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "rust-lang.rust-analyzer",
-        "bierner.github-markdown-preview"
+        "bierner.github-markdown-preview",
+        "binhtran432k.ungrammar-language-features"
     ]
 }

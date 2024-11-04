@@ -8,9 +8,9 @@ use super::CompilerOptions;
 
 fn check(input: &str, expect: expect_test::Expect) {
     let mut compiler = Compiler::<MemFs>::in_mem(
-        MemFs::from(&[("main.br", input)]),
+        MemFs::from(&[("/main.br", input)]),
         CompilerOptions {
-            entry_point: "main.br".into(),
+            entry_point: "/main.br".into(),
             writers: vec![Box::new(TypeScriptPrinter {}), Box::new(RustPrinter {})],
         },
     );

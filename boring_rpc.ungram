@@ -1,50 +1,89 @@
 /// see: https://rust-analyzer.github.io/blog/2020/10/24/introducing-ungrammar.html
+Name =
+  '#ident'
 
-Name = '#ident'
+Literal =
+  StringLiteral
+| NumberLiteral
+| BooleanLiteral
+| NullLiteral
+| ArrayLiteral
+| ObjectLiteral
 
-Literal = 
-  StringLiteral |
-  NumberLiteral |
-  BooleanLiteral |
-  NullLiteral |
-  ArrayLiteral |
-  ObjectLiteral
+StringLiteral =
+  '#string'
 
-StringLiteral = '#string'
-NumberLiteral = '#number'
-BooleanLiteral = 'true' | 'false'
-NullLiteral = 'null'
+NumberLiteral =
+  '#number'
 
-ArrayLiteral = '[' LiteralList? ']'
+BooleanLiteral =
+  'true' | 'false'
 
-ObjectLiteral = '{' LiteralFieldList? '}'
+NullLiteral =
+  'null'
 
-LiteralFieldList = LiteralField (',' LiteralField)* ','?
+ArrayLiteral =
+  '[' LiteralList? ']'
 
-LiteralField = key:Name ':' value:Literal
+ObjectLiteral =
+  '{' LiteralFieldList? '}'
 
-TypeDecl = 'type' Name '=' '{' FieldList? '}'
+LiteralFieldList =
+  LiteralField (',' LiteralField)* ','?
 
-TypeExpr = 
-  Name |
-  TypeArray
+LiteralField =
+  key:Name ':' value:Literal
 
-TypeArray = TypeExpr '[' ']'
+TypeDecl =
+  'type' Name '=' '{' FieldList? '}'
 
-FieldList = Field (',' Field)* ','?
+TypeExpr =
+  Name | TypeArray
 
-Field = MacroAttrs? DecoratorAttrs? field_name:Name ':' field_type:TypeExpr
+TypeArray =
+  TypeExpr '[' ']'
 
-MacroAttrs = MacroAttr MacroAttr*
+FieldList =
+  Field (',' Field)* ','?
 
-MacroAttr = '#' Name '(' LiteralList? ')'
+Field =
+  MacroAttrs? DecoratorAttrs? field_name:Name ':' field_type:TypeExpr
 
-DecoratorAttrs = DecoratorAttr DecoratorAttr*
+MacroAttrs =
+  MacroAttr MacroAttr*
 
-DecoratorAttr = '@' Name '(' LiteralList? ')'
+MacroAttr =
+  '#' Name '(' LiteralList? ')'
 
-LiteralList = Literal (',' Literal)* ','
+DecoratorAttrs =
+  DecoratorAttr DecoratorAttr*
 
-Module = TypeDeclList?
+DecoratorAttr =
+  '@' Name '(' LiteralList? ')'
 
-TypeDeclList = TypeDecl (TypeDecl)*
+LiteralList =
+  Literal (',' Literal)* ','
+
+Module =
+  StatementList?
+
+StatementList =
+  Statement (Statement)*
+
+Statement =
+  TypeDecl | ImportDecl
+
+ImportDecl = 
+  'import' ImportBody? 'from' ImportSource
+
+ImportBody =
+  '{' ImportSpecifierList? '}'
+
+ImportSpecifierList =
+  ImportSpecifier (',' ImportSpecifier)* ','?
+
+ImportSpecifier =
+  Name
+
+ImportSource =
+  '#string'

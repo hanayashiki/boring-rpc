@@ -1,5 +1,7 @@
 use boring_rpc_syn::{
-    GreenNode, GreenNodeOrToken::*, GreenToken, SyntaxError, SyntaxKind, TextRange, TextSize,
+    GreenNode,
+    GreenNodeOrToken::{self, *},
+    GreenToken, SyntaxError, SyntaxKind, TextRange, TextSize,
 };
 
 use crate::lexed_str::LexedStr;
@@ -117,7 +119,7 @@ impl Parser {
 
             match self.peek_keyword() {
                 Some(SyntaxKind::TypeKeyword) => {
-                    node.push(Node(self.parse_type_decl_list()));
+                    node.push(Node(self.parse_statement_list()));
                 }
                 _ => match self.peek().kind() {
                     SyntaxKind::EOF => break,
@@ -129,20 +131,49 @@ impl Parser {
         node
     }
 
-    fn parse_type_decl_list(&mut self) -> GreenNode {
-        assert!(self.peek_keyword() == Some(SyntaxKind::TypeKeyword));
+    fn parse_statement_list(&mut self) -> GreenNode {
+        assert!(matches!(
+            self.peek_keyword(),
+            Some(SyntaxKind::TypeKeyword | SyntaxKind::ImportKeyword)
+        ));
 
-        let mut node = GreenNode::new(SyntaxKind::TypeDeclList, Vec::new());
+        let mut statement_list_node = GreenNode::new(SyntaxKind::StatementList, Vec::new());
         loop {
             match self.peek_keyword() {
-                Some(SyntaxKind::TypeKeyword) => {
-                    node.push(Node(self.parse_type_decl()));
+                Some(SyntaxKind::TypeKeyword | SyntaxKind::ImportKeyword) => {
+                    statement_list_node.push(GreenNodeOrToken::Node(self.parse_statement()));
                 }
                 _ => break,
             }
 
-            self.eat_push(&mut node, SyntaxKind::Whitespace);
+            self.eat_push(&mut statement_list_node, SyntaxKind::Whitespace);
         }
+
+        statement_list_node
+    }
+
+    fn parse_statement(&mut self) -> GreenNode {
+        assert!(matches!(
+            self.peek_keyword(),
+            Some(SyntaxKind::TypeKeyword | SyntaxKind::ImportKeyword)
+        ));
+
+        let statement_node = GreenNode::new(
+            SyntaxKind::Statement,
+            vec![GreenNodeOrToken::Node(match self.peek_keyword() {
+                Some(SyntaxKind::TypeKeyword) => self.parse_type_decl(),
+                Some(SyntaxKind::ImportKeyword) => self.parse_import_decl(),
+                _ => unreachable!(),
+            })],
+        );
+        statement_node
+    }
+
+    fn parse_import_decl(&mut self) -> GreenNode {
+        let type_kw = self.eat_keyword().unwrap();
+        assert!(type_kw.kind() == SyntaxKind::TypeKeyword);
+
+        let mut node = GreenNode::new(SyntaxKind::ImportDecl, vec![Token(type_kw)]);
 
         node
     }

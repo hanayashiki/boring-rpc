@@ -9,6 +9,7 @@ boring_rpc_vfs = { path = "../boring_rpc_vfs" }
 boring_rpc_analyzer = { path = "../boring_rpc_analyzer" }
 boring_rpc_parser = { path = "../boring_rpc_parser" }
 boring_rpc_printers = { path = "../boring_rpc_printers" }
+boring_rpc_resolver = { path = "../boring_rpc_resolver" }
 
 
 [dev-dependencies]

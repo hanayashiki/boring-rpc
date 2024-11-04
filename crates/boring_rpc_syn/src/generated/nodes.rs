@@ -627,18 +627,18 @@ impl AstNode for Module {
     }
 }
 impl Module {
-    pub fn type_decl_list(&self) -> Option<TypeDeclList> {
-        self.syntax().cast_child::<TypeDeclList>()
+    pub fn statement_list(&self) -> Option<StatementList> {
+        self.syntax().cast_child::<StatementList>()
     }
 }
 
 #[derive(Debug, Clone)]
-pub struct TypeDeclList {
+pub struct StatementList {
     pub(crate) syntax: SyntaxNode,
 }
-impl AstNode for TypeDeclList {
+impl AstNode for StatementList {
     fn can_cast(kind: SyntaxKind) -> bool {
-        SyntaxKind::TypeDeclList == kind
+        SyntaxKind::StatementList == kind
     }
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         if Self::can_cast(syntax.kind()) {
@@ -651,8 +651,179 @@ impl AstNode for TypeDeclList {
         &self.syntax
     }
 }
-impl TypeDeclList {
-    pub fn type_decls(&self) -> Vec<TypeDecl> {
-        self.syntax().cast_children::<TypeDecl>()
+impl StatementList {
+    pub fn statements(&self) -> Vec<Statement> {
+        self.syntax().cast_children::<Statement>()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Statement {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for Statement {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::Statement == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl Statement {
+    pub fn import_decl(&self) -> Option<ImportDecl> {
+        self.syntax().cast_child::<ImportDecl>()
+    }
+    pub fn type_decl(&self) -> Option<TypeDecl> {
+        self.syntax().cast_child::<TypeDecl>()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ImportDecl {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for ImportDecl {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::ImportDecl == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ImportDecl {
+    pub fn import_body(&self) -> Option<ImportBody> {
+        self.syntax().cast_child::<ImportBody>()
+    }
+    pub fn import_source(&self) -> Option<ImportSource> {
+        self.syntax().cast_child::<ImportSource>()
+    }
+    pub fn from_keyword(&self) -> Option<FromKeyword> {
+        self.syntax().cast_token::<FromKeyword>()
+    }
+    pub fn import_keyword(&self) -> Option<ImportKeyword> {
+        self.syntax().cast_token::<ImportKeyword>()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ImportBody {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for ImportBody {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::ImportBody == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ImportBody {
+    pub fn import_specifier_list(&self) -> Option<ImportSpecifierList> {
+        self.syntax().cast_child::<ImportSpecifierList>()
+    }
+    pub fn l_curly(&self) -> Option<LCurly> {
+        self.syntax().cast_token::<LCurly>()
+    }
+    pub fn r_curly(&self) -> Option<RCurly> {
+        self.syntax().cast_token::<RCurly>()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ImportSource {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for ImportSource {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::ImportSource == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ImportSource {
+    pub fn string(&self) -> Option<String> {
+        self.syntax().cast_token::<String>()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ImportSpecifierList {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for ImportSpecifierList {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::ImportSpecifierList == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ImportSpecifierList {
+    pub fn comma(&self) -> Option<Comma> {
+        self.syntax().cast_token::<Comma>()
+    }
+    pub fn import_specifiers(&self) -> Vec<ImportSpecifier> {
+        self.syntax().cast_children::<ImportSpecifier>()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ImportSpecifier {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for ImportSpecifier {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::ImportSpecifier == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ImportSpecifier {
+    pub fn name(&self) -> Option<Name> {
+        self.syntax().cast_child::<Name>()
     }
 }

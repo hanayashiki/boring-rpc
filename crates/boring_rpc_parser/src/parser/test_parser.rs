@@ -24,17 +24,18 @@ fn type_decl_simple() {
         "type A = {}",
         expect![[r#"
             Module
-                TypeDeclList
-                    TypeDecl
-                        TypeKeyword "type"
-                        Whitespace " "
-                        Name
-                            Ident "A"
-                        Whitespace " "
-                        Equal "="
-                        Whitespace " "
-                        LCurly "{"
-                        RCurly "}"
+                StatementList
+                    Statement
+                        TypeDecl
+                            TypeKeyword "type"
+                            Whitespace " "
+                            Name
+                                Ident "A"
+                            Whitespace " "
+                            Equal "="
+                            Whitespace " "
+                            LCurly "{"
+                            RCurly "}"
         "#]],
     );
 }
@@ -45,17 +46,18 @@ fn type_decl_keyword_as_ident() {
         "type type = {}",
         expect![[r#"
             Module
-                TypeDeclList
-                    TypeDecl
-                        TypeKeyword "type"
-                        Whitespace " "
-                        Name
-                            Ident "type"
-                        Whitespace " "
-                        Equal "="
-                        Whitespace " "
-                        LCurly "{"
-                        RCurly "}"
+                StatementList
+                    Statement
+                        TypeDecl
+                            TypeKeyword "type"
+                            Whitespace " "
+                            Name
+                                Ident "type"
+                            Whitespace " "
+                            Equal "="
+                            Whitespace " "
+                            LCurly "{"
+                            RCurly "}"
         "#]],
     );
 }
@@ -70,28 +72,30 @@ fn type_decl_list() {
         expect![[r#"
             Module
                 Whitespace "\n            "
-                TypeDeclList
-                    TypeDecl
-                        TypeKeyword "type"
-                        Whitespace " "
-                        Name
-                            Ident "A"
-                        Whitespace " "
-                        Equal "="
-                        Whitespace " "
-                        LCurly "{"
-                        RCurly "}"
+                StatementList
+                    Statement
+                        TypeDecl
+                            TypeKeyword "type"
+                            Whitespace " "
+                            Name
+                                Ident "A"
+                            Whitespace " "
+                            Equal "="
+                            Whitespace " "
+                            LCurly "{"
+                            RCurly "}"
                     Whitespace "\n            "
-                    TypeDecl
-                        TypeKeyword "type"
-                        Whitespace " "
-                        Name
-                            Ident "B"
-                        Whitespace " "
-                        Equal "="
-                        Whitespace " "
-                        LCurly "{"
-                        RCurly "}"
+                    Statement
+                        TypeDecl
+                            TypeKeyword "type"
+                            Whitespace " "
+                            Name
+                                Ident "B"
+                            Whitespace " "
+                            Equal "="
+                            Whitespace " "
+                            LCurly "{"
+                            RCurly "}"
                     Whitespace "\n        "
         "#]],
     );
@@ -122,39 +126,40 @@ fn type_decl_fields() {
         expect![[r#"
             Module
                 Whitespace "\n            "
-                TypeDeclList
-                    TypeDecl
-                        TypeKeyword "type"
-                        Whitespace " "
-                        Name
-                            Ident "A"
-                        Whitespace " "
-                        Equal "="
-                        Whitespace " "
-                        LCurly "{"
-                        Whitespace "\n                "
-                        FieldList
-                            Field
-                                Name
-                                    Ident "a"
-                                Colon ":"
-                                Whitespace " "
-                                TypeExpr
-                                    Name
-                                        Ident "string"
-                            Comma ","
+                StatementList
+                    Statement
+                        TypeDecl
+                            TypeKeyword "type"
+                            Whitespace " "
+                            Name
+                                Ident "A"
+                            Whitespace " "
+                            Equal "="
+                            Whitespace " "
+                            LCurly "{"
                             Whitespace "\n                "
-                            Field
-                                Name
-                                    Ident "b"
-                                Colon ":"
-                                Whitespace " "
-                                TypeExpr
+                            FieldList
+                                Field
                                     Name
-                                        Ident "number"
-                            Comma ","
-                            Whitespace "\n            "
-                        RCurly "}"
+                                        Ident "a"
+                                    Colon ":"
+                                    Whitespace " "
+                                    TypeExpr
+                                        Name
+                                            Ident "string"
+                                Comma ","
+                                Whitespace "\n                "
+                                Field
+                                    Name
+                                        Ident "b"
+                                    Colon ":"
+                                    Whitespace " "
+                                    TypeExpr
+                                        Name
+                                            Ident "number"
+                                Comma ","
+                                Whitespace "\n            "
+                            RCurly "}"
         "#]],
     );
 
@@ -165,38 +170,39 @@ fn type_decl_fields() {
         }",
         expect![[r#"
             Module
-                TypeDeclList
-                    TypeDecl
-                        TypeKeyword "type"
-                        Whitespace " "
-                        Name
-                            Ident "NoTrailingComma"
-                        Whitespace " "
-                        Equal "="
-                        Whitespace " "
-                        LCurly "{"
-                        Whitespace "\n            "
-                        FieldList
-                            Field
-                                Name
-                                    Ident "a"
-                                Colon ":"
-                                Whitespace " "
-                                TypeExpr
-                                    Name
-                                        Ident "string"
-                            Comma ","
+                StatementList
+                    Statement
+                        TypeDecl
+                            TypeKeyword "type"
+                            Whitespace " "
+                            Name
+                                Ident "NoTrailingComma"
+                            Whitespace " "
+                            Equal "="
+                            Whitespace " "
+                            LCurly "{"
                             Whitespace "\n            "
-                            Field
-                                Name
-                                    Ident "b"
-                                Colon ":"
-                                Whitespace " "
-                                TypeExpr
+                            FieldList
+                                Field
                                     Name
-                                        Ident "number"
-                            Whitespace "\n        "
-                        RCurly "}"
+                                        Ident "a"
+                                    Colon ":"
+                                    Whitespace " "
+                                    TypeExpr
+                                        Name
+                                            Ident "string"
+                                Comma ","
+                                Whitespace "\n            "
+                                Field
+                                    Name
+                                        Ident "b"
+                                    Colon ":"
+                                    Whitespace " "
+                                    TypeExpr
+                                        Name
+                                            Ident "number"
+                                Whitespace "\n        "
+                            RCurly "}"
         "#]],
     )
 }

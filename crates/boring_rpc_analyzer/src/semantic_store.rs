@@ -66,10 +66,12 @@ pub struct SemanticStore {
 impl SemanticStore {
     pub fn build_module(&mut self, module_id: ModuleId, ast: &nodes::Module) -> ModuleId {
         let type_decls = ast
-            .type_decl_list()
-            .map_or(vec![], |x| x.type_decls())
+            .statement_list()
+            .map_or(vec![], |x| x.statements())
             .iter()
-            .map(|type_decl| self.build_type_decl(module_id.clone(), type_decl))
+            .filter_map(|statement| -> Option<TypeDecl> {
+                Some(self.build_type_decl(module_id.clone(), &statement.type_decl()?))
+            })
             .collect();
 
         self.modules.insert(

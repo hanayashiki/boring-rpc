@@ -1,0 +1,9 @@
+// Only import `Message` into scope
+import { Message } from '~/Message.br';
+
+// Import all from User into scope
+import '~/User.br';
+
+service Chat {
+    getMessageById(id: number): Message;
+}

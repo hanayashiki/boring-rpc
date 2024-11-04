@@ -29,16 +29,16 @@ TODO: codeblocks should be tagged with `br`
 // Scalar Types
 // Scalars are `JSONValue`s that have an atomic semantic and its mapping with the actual language is user-provided.
 // e.g. you can encode `Date` in the format of `"2024-01-01"` or `"20240101"` in string, or even `{ "year": 2024, "month": 1, "day": 1 }`
-import { Date, URL } from 'my-scalars'
+import { Date, URL } from '~/my-scalars.br'
 
 // Metadata
 // Metadatas are also user-provided piece of info that can be attached to each level of the syntax
 // Users can write plugins in the using language against them, e.g. limiting the length of strings.
-import { maxLength } from 'my-metadata'
+import { maxLength } from '~/my-metadata.br'
 
 // Struct Type
 type TextMessage = {
-    id: i64,
+    id: number,
 
     @maxLength(20)
     text: string,
@@ -97,10 +97,40 @@ type FileMessageCreate = {
 
 // RPC interface definition
 service Chat {
-    getMessageById(id: i64): Message;
+    getMessageById(id: number): Message;
     listMessages(): Message[];
 }
 ```
+
+## Import Resolution
+
+All local imports should start with local root: `~`.
+
+Relative import is not supported.
+
+```ts
+import {} from '~/message.br'
+```
+
+## Names
+
+1. Naming Rules
+
+All names should be `[a-zA-Z][a-zA-Z0-9]*`.
+For compling readable code, all type names REACHABLE from the entrypoint should be unique.
+
+For example, you can define `Date` by yourself.
+
+```ts
+type Date = {
+    year: number,
+    month: number,
+    day: number,
+}
+```
+
+But if you do that, you cannot `import { Date } from 'std'` anymore.
+
 
 ## References
 
