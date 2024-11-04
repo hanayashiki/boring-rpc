@@ -1,9 +1,11 @@
 use std::collections::BTreeMap;
 
+use boring_rpc_resolver::Resolver;
 use boring_rpc_syn::{SyntaxNode, SyntaxNodeId};
 
 use boring_rpc_parser::parser::Parser;
 use boring_rpc_syn::{nodes, AstNode, AstToken};
+use boring_rpc_vfs::vfs::Vfs;
 
 #[cfg(test)]
 mod test_semantic_store;
@@ -134,6 +136,10 @@ impl SemanticStore {
                     .map_or("#default_name".into(), |n| n.syntax().value().to_string())
             })),
         }
+    }
+
+    fn build_impl_decl<V: Vfs>(&mut self, ast: &nodes::ImportDecl) -> Option<ModuleId> {
+        todo!()
     }
 
     pub fn get_module(&self, module_id: ModuleId) -> Option<&Module> {

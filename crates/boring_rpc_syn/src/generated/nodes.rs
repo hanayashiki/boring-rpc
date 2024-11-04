@@ -1,5 +1,5 @@
 
-use crate::syn::{AstNode, SyntaxNode, SyntaxToken};
+use crate::syn::{AstNode, SyntaxNode};
 use crate::{tokens::*, SyntaxKind};
 
 #[derive(Debug, Clone)]
@@ -739,6 +739,9 @@ impl AstNode for ImportBody {
     }
 }
 impl ImportBody {
+    pub fn star(&self) -> Option<Star> {
+        self.syntax().cast_token::<Star>()
+    }
     pub fn import_specifier_list(&self) -> Option<ImportSpecifierList> {
         self.syntax().cast_child::<ImportSpecifierList>()
     }
@@ -823,7 +826,7 @@ impl AstNode for ImportSpecifier {
     }
 }
 impl ImportSpecifier {
-    pub fn name(&self) -> Option<Name> {
-        self.syntax().cast_child::<Name>()
+    pub fn ident(&self) -> Option<Ident> {
+        self.syntax().cast_token::<Ident>()
     }
 }

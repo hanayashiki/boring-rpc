@@ -1,6 +1,9 @@
 use std::{collections::{BTreeMap, HashSet}, slice::Iter};
 
-use crate::semantic_store;
+use boring_rpc_resolver::Resolver;
+use boring_rpc_vfs::vfs::Vfs;
+
+use crate::semantic_store::{self, SemanticStore};
 
 #[cfg(test)]
 mod test_infer_type_decl;
@@ -36,6 +39,11 @@ pub enum TypeRef {
 pub enum PrimitiveType {
     Number,
     String,
+}
+
+pub struct InferenceContext<'a, V: Vfs> {
+    sementic_store: &'a mut SemanticStore,
+    resolver: &'a Resolver<V>
 }
 
 #[derive(Debug, Default)]

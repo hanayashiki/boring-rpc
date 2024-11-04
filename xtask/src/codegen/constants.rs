@@ -29,4 +29,5 @@ pub static TOKEN_DEFS: &'static [(&str, &str)] = &[
     ("#", "Hash"),
     ("@", "At"),
     (":", "Colon"),
+    ("*", "Star"),
 ];

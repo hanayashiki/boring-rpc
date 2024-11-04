@@ -3,7 +3,7 @@ use expect_test::expect;
 use crate::semantic_store::SemanticStore;
 
 fn check(input: &str, expect: expect_test::Expect) {
-    let mut p = SemanticStore::inline_module(input);
+    let p = SemanticStore::inline_module(input);
     expect.assert_eq(&format!("{:#?}", p));
 }
 #[test]

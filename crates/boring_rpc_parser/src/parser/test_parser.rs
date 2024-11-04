@@ -206,3 +206,57 @@ fn type_decl_fields() {
         "#]],
     )
 }
+
+#[test]
+fn import_decl_star() {
+    check(
+        "import * from 'std'",
+        expect![[r#"
+            Module
+                StatementList
+                    Statement
+                        ImportDecl
+                            ImportKeyword "import"
+                            Whitespace " "
+                            ImportBody
+                                Star "*"
+                            Whitespace " "
+                            FromKeyword "from"
+                            Whitespace " "
+                            ImportSource
+                                String "std"
+        "#]],
+    )
+}
+
+#[test]
+fn import_decl_list() {
+    check(
+        "import { A, B } from 'std'",
+        expect![[r#"
+            Module
+                StatementList
+                    Statement
+                        ImportDecl
+                            ImportKeyword "import"
+                            Whitespace " "
+                            ImportBody
+                                LCurly "{"
+                                Whitespace " "
+                                ImportSpecifierList
+                                    ImportSpecifier
+                                        Ident "A"
+                                    Comma ","
+                                    Whitespace " "
+                                    ImportSpecifier
+                                        Ident "B"
+                                    Whitespace " "
+                                RCurly "}"
+                            Whitespace " "
+                            FromKeyword "from"
+                            Whitespace " "
+                            ImportSource
+                                String "std"
+        "#]],
+    )
+}

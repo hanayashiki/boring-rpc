@@ -50,6 +50,8 @@ pub enum SyntaxKind {
     At,
     #[doc = r"token kind"]
     Colon,
+    #[doc = r"token kind"]
+    Star,
     #[doc = r"node kind"]
     Name,
     #[doc = r"node kind"]
@@ -135,6 +137,7 @@ impl SyntaxKind {
             SyntaxKind::Hash => "#",
             SyntaxKind::At => "@",
             SyntaxKind::Colon => ":",
+            SyntaxKind::Star => "*",
             SyntaxKind::Name => "Name",
             SyntaxKind::Literal => "Literal",
             SyntaxKind::StringLiteral => "StringLiteral",

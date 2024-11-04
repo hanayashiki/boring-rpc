@@ -6,6 +6,8 @@ edition = "2021"
 [dependencies]
 boring_rpc_syn = { path = "../boring_rpc_syn" }
 boring_rpc_parser = { path = "../boring_rpc_parser" }
+boring_rpc_resolver = { path = "../boring_rpc_resolver" }
+boring_rpc_vfs = { path = "../boring_rpc_vfs" }
 
 [dev-dependencies]
 expect-test = "1.5.0"

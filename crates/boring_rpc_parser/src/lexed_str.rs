@@ -63,6 +63,37 @@ impl<'a> LexedStr<'a> {
                     // TODO: handle exp part
                     tokens.push(GreenToken::new(SyntaxKind::Number, value));
                 }
+                '\'' => {
+                    iter.next();
+                    let mut value = String::new();
+                    while let Some(c) = iter.next() {
+                        // handle esacpe
+                        if c == '\\' {
+                            match iter.next() {
+                                Some('\'') => value.push('\''),
+                                Some('\\') => value.push('\\'),
+                                Some('n') => value.push('\n'),
+                                Some('r') => value.push('\r'),
+                                Some('t') => value.push('\t'),
+                                Some('u') => {
+                                    todo!();
+                                }
+                                Some(c) => {
+                                    value.push(c);
+                                },
+                                None => {
+                                    break;
+                                }
+                            }
+                            continue;
+                        }
+                        if c == '\'' {
+                            break;
+                        }
+                        value.push(c);
+                    }
+                    tokens.push(GreenToken::new(SyntaxKind::String, value));
+                }
                 ' ' | '\t' | '\n' | '\r' => {
                     let mut value = String::with_capacity(16);
 
@@ -115,6 +146,10 @@ impl<'a> LexedStr<'a> {
                 ':' => {
                     iter.next();
                     tokens.push(GreenToken::new(SyntaxKind::Colon, ":".to_string()));
+                }
+                '*' => {
+                    iter.next();
+                    tokens.push(GreenToken::new(SyntaxKind::Star, "*".to_string()));
                 }
                 _ => {
                     iter.next();

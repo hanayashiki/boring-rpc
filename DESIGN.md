@@ -36,6 +36,12 @@ import { Date, URL } from '~/my-scalars.br'
 // Users can write plugins in the using language against them, e.g. limiting the length of strings.
 import { maxLength } from '~/my-metadata.br'
 
+// Import star: import everything from another module.
+// Note: unlike JS, `import *` does not follow `as` because we enforce uniqueness for exported specifiers.
+import * from '~/import-star.br'
+
+// Note: all imported or declared types are considered exported.
+
 // Struct Type
 type TextMessage = {
     id: number,
