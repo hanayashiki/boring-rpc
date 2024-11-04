@@ -18,7 +18,7 @@ fn check(input: &str, expect: expect_test::Expect) {
     let result = compiler.compile();
 
     expect.assert_eq(&format!(
-        "// typescript\n{} // rust\n{}",
+        "// typescript\n{}// rust\n{}",
         &result.outputs[0].1, &result.outputs[1].1
     ));
 }
@@ -43,10 +43,10 @@ fn test_simple() {
 
             export interface B {}
 
-             // rust
+            // rust
             pub struct A {
-                a: String, 
-                b: String,
+                pub a: String, 
+                pub b: String,
             }
 
             pub struct B {}

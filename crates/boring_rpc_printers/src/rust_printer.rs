@@ -17,7 +17,7 @@ impl Printer for RustPrinter {
                         .iter()
                         .map(|(name, ty)| {
                             format!(
-                                "    {}: {}",
+                                "    pub {}: {}",
                                 name,
                                 match ty {
                                     type_store::TypeRef::PrimitiveType(primitive) => match primitive {
