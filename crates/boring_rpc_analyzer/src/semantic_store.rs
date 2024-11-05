@@ -30,9 +30,18 @@ pub enum TypeDeclKind {
 pub struct TypeDecl {
     pub name: String,
     pub kind: TypeDeclKind,
-    pub syntax_node_id: SyntaxNodeId,
-
     pub fields: Vec<Field>,
+
+    pub syntax_node_id: SyntaxNodeId,
+}
+
+#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+pub struct ImportDecl {
+    pub star: bool,
+    pub names: Vec<String>,
+    pub source: String,
+
+    pub syntax_node_id: SyntaxNodeId,
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
@@ -57,6 +66,7 @@ pub enum TypeExprNode {
 pub struct Module {
     pub(crate) module_id: ModuleId,
     pub(crate) type_decls: Vec<TypeDecl>,
+    pub(crate) import_decls: Vec<ImportDecl>,
 }
 
 #[derive(Debug, Default)]
@@ -67,20 +77,20 @@ pub struct SemanticStore {
 
 impl SemanticStore {
     pub fn build_module(&mut self, module_id: ModuleId, ast: &nodes::Module) -> ModuleId {
-        let type_decls = ast
-            .statement_list()
-            .map_or(vec![], |x| x.statements())
-            .iter()
-            .filter_map(|statement| -> Option<TypeDecl> {
-                Some(self.build_type_decl(module_id.clone(), &statement.type_decl()?))
-            })
-            .collect();
+        let type_decls = map_statements(ast, |statement| -> Option<TypeDecl> {
+            Some(self.build_type_decl(module_id.clone(), &statement.type_decl()?))
+        });
+
+        let import_decls = map_statements(ast, |statement| -> Option<ImportDecl> {
+            Some(self.build_import_decl(&statement.import_decl()?))
+        });
 
         self.modules.insert(
             module_id.clone(),
             Module {
                 module_id: module_id.clone(),
                 type_decls,
+                import_decls,
             },
         );
 
@@ -88,12 +98,13 @@ impl SemanticStore {
     }
 
     fn build_type_decl(&mut self, module_id: ModuleId, ast: &nodes::TypeDecl) -> TypeDecl {
-        let default_name = "#default_name";
-        // TODO: pick a default name
-        let name = ast.name().map_or(default_name.into(), |n| {
-            n.ident()
-                .map_or(default_name.into(), |n| n.syntax().value().to_string())
-        });
+        let name = ast
+            .name()
+            .iter()
+            .filter_map(|f| f.ident())
+            .map(|s| s.syntax().value().to_string())
+            .next()
+            .unwrap_or("#default_name".into());
 
         TypeDecl {
             name,
@@ -138,8 +149,35 @@ impl SemanticStore {
         }
     }
 
-    fn build_impl_decl<V: Vfs>(&mut self, ast: &nodes::ImportDecl) -> Option<ModuleId> {
-        todo!()
+    fn build_import_decl(&mut self, ast: &nodes::ImportDecl) -> ImportDecl {
+        ImportDecl {
+            syntax_node_id: ast.syntax().id(),
+            star: ast
+                .import_body()
+                .iter()
+                .map(|s| s.star().is_some())
+                .next()
+                .unwrap_or(false),
+            names: ast
+                .import_body()
+                .iter()
+                .filter_map(|f| f.import_specifier_list())
+                .map(|f| f.import_specifiers())
+                .map(|s| {
+                    s.iter()
+                        .filter_map(|s| Some(s.ident()?.syntax().value().to_string()))
+                        .collect()
+                })
+                .next()
+                .unwrap_or(vec![]),
+            source: ast
+                .import_source()
+                .iter()
+                .filter_map(|s| s.string())
+                .map(|s| s.syntax().value().to_string())
+                .next()
+                .unwrap_or("#default_source".into()),
+        }
     }
 
     pub fn get_module(&self, module_id: ModuleId) -> Option<&Module> {
@@ -157,4 +195,15 @@ impl SemanticStore {
 
         store.modules.get(&module_id).unwrap().clone()
     }
+}
+
+fn map_statements<T, F: FnMut(&nodes::Statement) -> Option<T>>(
+    ast: &nodes::Module,
+    f: F,
+) -> Vec<T> {
+    ast.statement_list()
+        .map_or(vec![], |x| x.statements())
+        .iter()
+        .filter_map(f)
+        .collect()
 }
