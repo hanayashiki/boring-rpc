@@ -13,6 +13,8 @@ pub enum SyntaxKind {
     #[doc = r"token kind"]
     FromKeyword,
     #[doc = r"token kind"]
+    ServiceKeyword,
+    #[doc = r"token kind"]
     Ident,
     #[doc = r"token kind"]
     String,
@@ -101,6 +103,8 @@ pub enum SyntaxKind {
     #[doc = r"node kind"]
     ImportDecl,
     #[doc = r"node kind"]
+    ServiceDecl,
+    #[doc = r"node kind"]
     ImportBody,
     #[doc = r"node kind"]
     ImportSource,
@@ -108,6 +112,10 @@ pub enum SyntaxKind {
     ImportSpecifierList,
     #[doc = r"node kind"]
     ImportSpecifier,
+    #[doc = r"node kind"]
+    ServiceMethodList,
+    #[doc = r"node kind"]
+    ServiceMethod,
 }
 impl SyntaxKind {
     pub fn to_ungram_name(&self) -> &'static str {
@@ -118,6 +126,7 @@ impl SyntaxKind {
             SyntaxKind::NullKeyword => "null",
             SyntaxKind::ImportKeyword => "import",
             SyntaxKind::FromKeyword => "from",
+            SyntaxKind::ServiceKeyword => "service",
             SyntaxKind::Ident => "#ident",
             SyntaxKind::String => "#string",
             SyntaxKind::Number => "#number",
@@ -162,10 +171,13 @@ impl SyntaxKind {
             SyntaxKind::StatementList => "StatementList",
             SyntaxKind::Statement => "Statement",
             SyntaxKind::ImportDecl => "ImportDecl",
+            SyntaxKind::ServiceDecl => "ServiceDecl",
             SyntaxKind::ImportBody => "ImportBody",
             SyntaxKind::ImportSource => "ImportSource",
             SyntaxKind::ImportSpecifierList => "ImportSpecifierList",
             SyntaxKind::ImportSpecifier => "ImportSpecifier",
+            SyntaxKind::ServiceMethodList => "ServiceMethodList",
+            SyntaxKind::ServiceMethod => "ServiceMethod",
         }
     }
 }

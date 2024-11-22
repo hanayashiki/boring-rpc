@@ -1,5 +1,5 @@
 
-use crate::syn::{AstNode, SyntaxNode};
+use crate::syn::{AstNode, SyntaxNode, SyntaxToken};
 use crate::{tokens::*, SyntaxKind};
 
 #[derive(Debug, Clone)]
@@ -680,6 +680,9 @@ impl Statement {
     pub fn import_decl(&self) -> Option<ImportDecl> {
         self.syntax().cast_child::<ImportDecl>()
     }
+    pub fn service_decl(&self) -> Option<ServiceDecl> {
+        self.syntax().cast_child::<ServiceDecl>()
+    }
     pub fn type_decl(&self) -> Option<TypeDecl> {
         self.syntax().cast_child::<TypeDecl>()
     }
@@ -716,6 +719,43 @@ impl ImportDecl {
     }
     pub fn import_keyword(&self) -> Option<ImportKeyword> {
         self.syntax().cast_token::<ImportKeyword>()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ServiceDecl {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for ServiceDecl {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::ServiceDecl == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ServiceDecl {
+    pub fn name(&self) -> Option<Name> {
+        self.syntax().cast_child::<Name>()
+    }
+    pub fn service_method_list(&self) -> Option<ServiceMethodList> {
+        self.syntax().cast_child::<ServiceMethodList>()
+    }
+    pub fn service_keyword(&self) -> Option<ServiceKeyword> {
+        self.syntax().cast_token::<ServiceKeyword>()
+    }
+    pub fn l_curly(&self) -> Option<LCurly> {
+        self.syntax().cast_token::<LCurly>()
+    }
+    pub fn r_curly(&self) -> Option<RCurly> {
+        self.syntax().cast_token::<RCurly>()
     }
 }
 
@@ -828,5 +868,79 @@ impl AstNode for ImportSpecifier {
 impl ImportSpecifier {
     pub fn ident(&self) -> Option<Ident> {
         self.syntax().cast_token::<Ident>()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ServiceMethodList {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for ServiceMethodList {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::ServiceMethodList == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ServiceMethodList {
+    pub fn comma(&self) -> Option<Comma> {
+        self.syntax().cast_token::<Comma>()
+    }
+    pub fn service_methods(&self) -> Vec<ServiceMethod> {
+        self.syntax().cast_children::<ServiceMethod>()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ServiceMethod {
+    pub(crate) syntax: SyntaxNode,
+}
+impl AstNode for ServiceMethod {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::ServiceMethod == kind
+    }
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxNode {
+        &self.syntax
+    }
+}
+impl ServiceMethod {
+    pub fn l_parenthesis(&self) -> Option<LParenthesis> {
+        self.syntax().cast_token::<LParenthesis>()
+    }
+    pub fn r_parenthesis(&self) -> Option<RParenthesis> {
+        self.syntax().cast_token::<RParenthesis>()
+    }
+    pub fn colon(&self) -> Option<Colon> {
+        self.syntax().cast_token::<Colon>()
+    }
+    pub fn decorator_attrs(&self) -> Option<DecoratorAttrs> {
+        self.syntax().cast_child::<DecoratorAttrs>()
+    }
+    pub fn field_list(&self) -> Option<FieldList> {
+        self.syntax().cast_child::<FieldList>()
+    }
+    pub fn macro_attrs(&self) -> Option<MacroAttrs> {
+        self.syntax().cast_child::<MacroAttrs>()
+    }
+    pub fn method_name(&self) -> Option<Name> {
+        self.syntax().cast_child::<Name>()
+    }
+    pub fn method_return(&self) -> Option<TypeExpr> {
+        self.syntax().cast_child::<TypeExpr>()
     }
 }

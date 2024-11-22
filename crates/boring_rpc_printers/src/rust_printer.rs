@@ -1,7 +1,10 @@
-use std::io::{Result, Write};
+use std::{
+    io::{Result, Write},
+    primitive,
+};
 
-use boring_rpc_analyzer::type_store;
 use crate::Printer;
+use boring_rpc_analyzer::type_store::{self, TypeRef};
 
 pub struct RustPrinter {}
 
@@ -20,7 +23,9 @@ impl Printer for RustPrinter {
                                 "    pub {}: {}",
                                 name,
                                 match ty {
-                                    type_store::TypeRef::PrimitiveType(primitive) => match primitive {
+                                    type_store::TypeExpr::TypeRef(TypeRef::PrimitiveType(
+                                        primitive,
+                                    )) => match primitive {
                                         type_store::PrimitiveType::Number => "f64".to_string(),
                                         type_store::PrimitiveType::String => "String".to_string(),
                                     },

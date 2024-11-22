@@ -7,6 +7,7 @@ pub static TOKEN_DEFS: &'static [(&str, &str)] = &[
     ("null", "NullKeyword"),
     ("import", "ImportKeyword"),
     ("from", "FromKeyword"),
+    ("service", "ServiceKeyword"),
     // Literals
     ("#ident", "Ident"),
     ("#string", "String"),

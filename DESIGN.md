@@ -75,6 +75,12 @@ scalar HttpURL
 // Union Types
 union Message = TextMessage | FileMessage;
 
+// Array
+type M = {
+    stringArray: string[].
+    ms: M[],
+}
+
 // Procedure Macros
 //
 // Programmatic manipulation of `type`s and `interface`s are possible
@@ -90,10 +96,10 @@ type TextMessageCreate = {}
 
 type ReportTicket = {
     @primaryKey('Message')
-    messageId: i64;
+    messageId: i64,
 
     #default_maxlen
-    reason: string;
+    reason: string,
 }
 
 // Type Reference
@@ -103,8 +109,8 @@ type FileMessageCreate = {
 
 // RPC interface definition
 service Chat {
-    getMessageById(id: number): Message;
-    listMessages(): Message[];
+    getMessageById(id: number): Message,
+    listMessages(): Message[],
 }
 ```
 

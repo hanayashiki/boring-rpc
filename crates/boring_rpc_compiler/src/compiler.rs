@@ -2,7 +2,7 @@ use std::{path::PathBuf, rc::Rc};
 
 use boring_rpc_analyzer::{
     semantic_store::{ModuleId, SemanticStore},
-    type_store::TypeStore,
+    type_store::{InferenceContext, TypeStore},
 };
 use boring_rpc_parser::parser::Parser;
 use boring_rpc_resolver::Resolver;
@@ -23,7 +23,7 @@ pub struct Compiler<V: Vfs> {
     vfs: Rc<V>,
     resolver: Resolver<V>,
     semantic_store: SemanticStore,
-    type_store: TypeStore,
+    type_store: TypeStore<V>,
     options: CompilerOptions,
 }
 
@@ -42,12 +42,12 @@ impl<V: Vfs> Compiler<V> {
             vfs: vfs.clone(),
             resolver: Resolver::new(vfs.clone(), root.into()),
             semantic_store: SemanticStore::default(),
-            type_store: TypeStore::default(),
+            type_store: TypeStore::new(),
             options,
         }
     }
 
-    fn compile(&mut self) -> CompilationResult {
+    pub fn compile(&mut self) -> CompilationResult {
         let entry_point_content =
             String::from_utf8(self.vfs.read(&self.options.entry_point).unwrap()).unwrap();
 
@@ -60,9 +60,11 @@ impl<V: Vfs> Compiler<V> {
             .semantic_store
             .build_module(ModuleId::new("inline"), &module_syntax_node);
 
-        let module = self.semantic_store.get_module(module_id.clone()).unwrap();
-
-        let module_type = self.type_store.infer_module(module);
+        let module_type = self.type_store.infer_module(&mut InferenceContext {
+            sementic_store: &mut self.semantic_store,
+            resolver: &self.resolver,
+            module_id,
+        });
 
         let mut result = CompilationResult {
             outputs: Vec::new(),

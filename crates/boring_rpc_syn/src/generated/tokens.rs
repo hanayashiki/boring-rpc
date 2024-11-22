@@ -123,6 +123,26 @@ impl AstToken for FromKeyword {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ServiceKeyword {
+    pub(crate) syntax: SyntaxToken,
+}
+impl AstToken for ServiceKeyword {
+    fn can_cast(kind: SyntaxKind) -> bool {
+        SyntaxKind::ServiceKeyword == kind
+    }
+    fn cast(syntax: SyntaxToken) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    fn syntax(&self) -> &SyntaxToken {
+        &self.syntax
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Ident {
     pub(crate) syntax: SyntaxToken,
 }

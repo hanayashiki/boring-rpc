@@ -1,7 +1,7 @@
 use std::io::{Result, Write};
 
-use boring_rpc_analyzer::type_store;
 use crate::Printer;
+use boring_rpc_analyzer::type_store::{self, TypeRef};
 
 pub struct TypeScriptPrinter {}
 
@@ -20,7 +20,9 @@ impl Printer for TypeScriptPrinter {
                                 "    {}: {}",
                                 name,
                                 match ty {
-                                    type_store::TypeRef::PrimitiveType(primitive) => match primitive {
+                                    type_store::TypeExpr::TypeRef(TypeRef::PrimitiveType(
+                                        primitive,
+                                    )) => match primitive {
                                         type_store::PrimitiveType::Number => "number".to_string(),
                                         type_store::PrimitiveType::String => "string".to_string(),
                                     },

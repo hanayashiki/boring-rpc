@@ -1,6 +1,6 @@
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, rc::Rc};
 
-use boring_rpc_resolver::Resolver;
+use boring_rpc_resolver::{Resolution, ResolutionId, Resolver};
 use boring_rpc_syn::{SyntaxNode, SyntaxNodeId};
 
 use boring_rpc_parser::parser::Parser;
@@ -12,6 +12,15 @@ mod test_semantic_store;
 
 #[derive(Hash, PartialOrd, Ord, Eq, PartialEq, Debug, Clone)]
 pub struct ModuleId(String);
+
+impl From<ResolutionId> for ModuleId {
+    fn from(value: ResolutionId) -> Self {
+        ModuleId(value.0)
+    }
+}
+
+#[derive(Hash, Eq, PartialEq, Debug, Clone)]
+pub struct DeclId(pub ModuleId, pub String);
 
 impl ModuleId {
     pub fn new(name: &str) -> Self {
@@ -71,7 +80,7 @@ pub struct Module {
 
 #[derive(Debug, Default)]
 pub struct SemanticStore {
-    modules: BTreeMap<ModuleId, Module>,
+    modules: BTreeMap<ModuleId, Rc<Module>>,
     module_nodes: BTreeMap<ModuleId, BTreeMap<SyntaxNodeId, SyntaxNode>>,
 }
 
@@ -87,11 +96,11 @@ impl SemanticStore {
 
         self.modules.insert(
             module_id.clone(),
-            Module {
+            Rc::new(Module {
                 module_id: module_id.clone(),
                 type_decls,
                 import_decls,
-            },
+            }),
         );
 
         module_id
@@ -180,11 +189,49 @@ impl SemanticStore {
         }
     }
 
-    pub fn get_module(&self, module_id: ModuleId) -> Option<&Module> {
-        self.modules.get(&module_id)
+    pub fn resolve_name<V: Vfs>(
+        &mut self,
+        module_id: ModuleId,
+        name: &String,
+        resolver: &Resolver<V>,
+    ) -> Option<DeclId> {
+        let module = self.modules.get(&module_id)?;
+
+        if let Some(_) = module
+            .type_decls
+            .iter()
+            .find(|type_decl| type_decl.name == *name)
+        {
+            return Some(DeclId(module_id.clone(), name.clone()));
+        }
+
+        if let Some(resolution) = module.import_decls.iter().find_map(|import_decl| {
+            if import_decl.star {
+                // TODO: resolve star imports
+                None
+            } else {
+                resolver.resolve(&import_decl.source).ok()
+            }
+        }) {
+            match resolution {
+                Resolution::Module((resolution_id, module)) => {
+                    self.build_module(resolution_id.into(), &module);
+
+                    return Some(DeclId(module_id.clone(), name.clone()));
+                }
+                // TODO: std
+                _ => return None,
+            }
+        }
+
+        None
     }
 
-    pub fn inline_module(text: &str) -> Module {
+    pub fn get_module(&self, module_id: ModuleId) -> Option<Rc<Module>> {
+        self.modules.get(&module_id).cloned()
+    }
+
+    pub fn inline_module(text: &str) -> Rc<Module> {
         let mut p = Parser::of(text);
         let node = p.parse_module();
         let mut store = SemanticStore::default();
@@ -193,7 +240,7 @@ impl SemanticStore {
 
         let module_id = store.build_module(ModuleId::new("inline"), &module);
 
-        store.modules.get(&module_id).unwrap().clone()
+        store.get_module(module_id).clone().unwrap()
     }
 }
 

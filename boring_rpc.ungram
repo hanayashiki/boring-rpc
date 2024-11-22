@@ -71,14 +71,13 @@ StatementList =
   Statement (Statement)*
 
 Statement =
-  TypeDecl | ImportDecl
+  TypeDecl | ImportDecl | ServiceDecl
 
-ImportDecl = 
+ImportDecl =
   'import' ImportBody? 'from' ImportSource
 
 ImportBody =
-  '*' |
-  '{' ImportSpecifierList? '}'
+  '*' | '{' ImportSpecifierList? '}'
 
 ImportSpecifierList =
   ImportSpecifier (',' ImportSpecifier)* ','?
@@ -88,3 +87,19 @@ ImportSpecifier =
 
 ImportSource =
   '#string'
+
+ServiceDecl =
+  'service' Name '{' ServiceMethodList? '}'
+
+ServiceMethodList =
+  ServiceMethod (',' ServiceMethod)* ','?
+
+ServiceMethod =
+  MacroAttrs?
+  DecoratorAttrs?
+  method_name:Name
+  '('
+  FieldList?
+  ')'
+  ':'
+  method_return:TypeExpr
