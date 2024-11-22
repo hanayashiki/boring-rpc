@@ -260,3 +260,103 @@ fn import_decl_list() {
         "#]],
     )
 }
+
+#[test]
+fn service_decl() {
+    check(
+        "service A {}",
+        expect![[r#"
+            Module
+                StatementList
+                    Statement
+                        ServiceDecl
+                            ServiceKeyword "service"
+                            Whitespace " "
+                            Name
+                                Ident "A"
+                            Whitespace " "
+                            LCurly "{"
+                            RCurly "}"
+        "#]],
+    );
+
+    check(
+        "service A { rpc(): string }",
+        expect![[r#"
+            Module
+                StatementList
+                    Statement
+                        ServiceDecl
+                            ServiceKeyword "service"
+                            Whitespace " "
+                            Name
+                                Ident "A"
+                            Whitespace " "
+                            LCurly "{"
+                            Whitespace " "
+                            ServiceMethodList
+                                Field
+                                    Name
+                                        Ident "rpc"
+                                    LParenthesis "("
+                                    RParenthesis ")"
+                                    Colon ":"
+                                    Whitespace " "
+                                    TypeExpr
+                                        Name
+                                            Ident "string"
+                                Whitespace " "
+                            RCurly "}"
+        "#]],
+    );
+
+    check(
+        "service A { rpc(p1: P, p2: P): R }",
+        expect![[r#"
+            Module
+                StatementList
+                    Statement
+                        ServiceDecl
+                            ServiceKeyword "service"
+                            Whitespace " "
+                            Name
+                                Ident "A"
+                            Whitespace " "
+                            LCurly "{"
+                            Whitespace " "
+                            ServiceMethodList
+                                Field
+                                    Name
+                                        Ident "rpc"
+                                    LParenthesis "("
+                                    FieldList
+                                        Field
+                                            Name
+                                                Ident "p1"
+                                            Colon ":"
+                                            Whitespace " "
+                                            TypeExpr
+                                                Name
+                                                    Ident "P"
+                                        Comma ","
+                                        Whitespace " "
+                                        Field
+                                            Name
+                                                Ident "p2"
+                                            Colon ":"
+                                            Whitespace " "
+                                            TypeExpr
+                                                Name
+                                                    Ident "P"
+                                    RParenthesis ")"
+                                    Colon ":"
+                                    Whitespace " "
+                                    TypeExpr
+                                        Name
+                                            Ident "R"
+                                Whitespace " "
+                            RCurly "}"
+        "#]]
+    )
+
+}

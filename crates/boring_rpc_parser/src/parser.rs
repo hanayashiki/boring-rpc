@@ -72,6 +72,7 @@ impl Parser {
                 "true" => Some(SyntaxKind::TrueKeyword),
                 "false" => Some(SyntaxKind::FalseKeyword),
                 "from" => Some(SyntaxKind::FromKeyword),
+                "service" => Some(SyntaxKind::ServiceKeyword),
                 _ => None,
             },
             _ => None,
@@ -149,7 +150,11 @@ impl Parser {
             self.eat_push(&mut node, SyntaxKind::Whitespace);
 
             match self.peek_keyword() {
-                Some(SyntaxKind::TypeKeyword | SyntaxKind::ImportKeyword) => {
+                Some(
+                    SyntaxKind::TypeKeyword
+                    | SyntaxKind::ImportKeyword
+                    | SyntaxKind::ServiceKeyword,
+                ) => {
                     node.push(Node(self.parse_statement_list()));
                 }
                 _ => match self.peek().kind() {
@@ -169,13 +174,17 @@ impl Parser {
     fn parse_statement_list(&mut self) -> GreenNode {
         assert!(matches!(
             self.peek_keyword(),
-            Some(SyntaxKind::TypeKeyword | SyntaxKind::ImportKeyword)
+            Some(SyntaxKind::TypeKeyword | SyntaxKind::ImportKeyword | SyntaxKind::ServiceKeyword)
         ));
 
         let mut statement_list_node = GreenNode::new(SyntaxKind::StatementList, Vec::new());
         loop {
             match self.peek_keyword() {
-                Some(SyntaxKind::TypeKeyword | SyntaxKind::ImportKeyword) => {
+                Some(
+                    SyntaxKind::TypeKeyword
+                    | SyntaxKind::ImportKeyword
+                    | SyntaxKind::ServiceKeyword,
+                ) => {
                     statement_list_node.push(GreenNodeOrToken::Node(self.parse_statement()));
                 }
                 _ => break,
@@ -190,7 +199,7 @@ impl Parser {
     fn parse_statement(&mut self) -> GreenNode {
         assert!(matches!(
             self.peek_keyword(),
-            Some(SyntaxKind::TypeKeyword | SyntaxKind::ImportKeyword)
+            Some(SyntaxKind::TypeKeyword | SyntaxKind::ImportKeyword | SyntaxKind::ServiceKeyword)
         ));
 
         let statement_node = GreenNode::new(
@@ -198,6 +207,7 @@ impl Parser {
             vec![GreenNodeOrToken::Node(match self.peek_keyword() {
                 Some(SyntaxKind::TypeKeyword) => self.parse_type_decl(),
                 Some(SyntaxKind::ImportKeyword) => self.parse_import_decl(),
+                Some(SyntaxKind::ServiceKeyword) => self.parse_service_decl(),
                 _ => unreachable!(),
             })],
         );
@@ -378,6 +388,98 @@ impl Parser {
             // field_type
             self.eat_push(node, SyntaxKind::Whitespace);
             node.push(Node(self.parse_type_expr()));
+        }
+
+        node
+    }
+
+    fn parse_service_decl(&mut self) -> GreenNode {
+        let service_kw = self.eat_keyword().unwrap();
+        assert!(service_kw.kind() == SyntaxKind::ServiceKeyword);
+        println!("1");
+        let mut node = GreenNode::new(SyntaxKind::ServiceDecl, vec![Token(service_kw)]);
+
+        {
+            let node = &mut node;
+
+            self.eat_push(node, SyntaxKind::Whitespace);
+
+            if self.peek().kind() == SyntaxKind::Ident {
+                node.push(Node(self.parse_name()));
+            }
+
+            self.eat_push(node, SyntaxKind::Whitespace);
+            self.expect_push(node, SyntaxKind::LCurly);
+            self.eat_push(node, SyntaxKind::Whitespace);
+
+            if let SyntaxKind::Hash | SyntaxKind::At | SyntaxKind::Ident = self.peek().kind() {
+                println!("2");
+                node.push(Node(self.parse_service_method_list()))
+            }
+
+            self.expect_push(node, SyntaxKind::RCurly);
+        }
+
+        node
+    }
+
+    fn parse_service_method_list(&mut self) -> GreenNode {
+        let mut node = GreenNode::new(SyntaxKind::ServiceMethodList, Vec::new());
+        {
+            let node = &mut node;
+
+            // TODO: macros and decorators
+            loop {
+                match self.peek().kind() {
+                    SyntaxKind::Ident => {
+                        node.push(Node(self.parse_service_method()));
+
+                        self.eat_push(node, SyntaxKind::Whitespace);
+                        self.eat_push(node, SyntaxKind::Comma);
+                        self.eat_push(node, SyntaxKind::Whitespace);
+                    }
+                    _ => break,
+                }
+            }
+        }
+
+        node
+    }
+
+    fn parse_service_method(&mut self) -> GreenNode {
+        assert!(self.peek().kind() == SyntaxKind::Ident);
+
+        let mut node = GreenNode::new(SyntaxKind::Field, vec![]);
+        {
+            let node = &mut node;
+
+            // method_name
+            node.push(Node(self.parse_name()));
+
+            self.eat_push(node, SyntaxKind::Whitespace);
+            self.expect_push(node, SyntaxKind::LParenthesis);
+
+            self.eat_push(node, SyntaxKind::Whitespace);
+
+            if let SyntaxKind::Hash | SyntaxKind::At | SyntaxKind::Ident = self.peek().kind() {
+                node.push(Node(self.parse_field_list()))
+            }
+
+            self.expect_push(node, SyntaxKind::RParenthesis);
+            self.eat_push(node, SyntaxKind::Whitespace);
+            self.expect_push(node, SyntaxKind::Colon);
+
+            self.eat_push(node, SyntaxKind::Whitespace);
+
+            // method_return
+            if let SyntaxKind::Ident = self.peek().kind() {
+                node.push(Node(self.parse_type_expr()))
+            } else {
+                self.errors.push(SyntaxError::new(
+                    format!("Expect a type expression for the method return type.",),
+                    self.cur_range(),
+                ));
+            }
         }
 
         node
