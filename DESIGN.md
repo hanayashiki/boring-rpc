@@ -121,7 +121,7 @@ All local imports should start with local root: `~`.
 Relative import is not supported.
 
 ```ts
-import {} from '~/message.br'
+import {} from "~/message.br";
 ```
 
 ## Names
@@ -135,42 +135,51 @@ For example, you can define `Date` by yourself.
 
 ```ts
 type Date = {
-    year: number,
-    month: number,
-    day: number,
-}
+  year: number;
+  month: number;
+  day: number;
+};
 ```
 
 But if you do that, you cannot `import { Date } from 'std'` anymore.
 
-
 ## References
 
 1. Rust Analyzer Syntax: https://rust-analyzer.github.io/blog/2020/10/24/introducing-ungrammar.html
-    1. Syntax
-        1. https://github.com/rust-lang/rust-analyzer/blob/master/xtask/src/codegen/grammar.rs
-        2. https://github.com/rust-lang/rust-analyzer/blob/master/crates/syntax/rust.ungram
-        3. https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
-    4. Parser: 
-        1. Pratt Parser: https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html
-        1. https://github.com/rust-lang/rust-analyzer/blob/master/crates/parser/src/event.rs
+
+   1. Syntax
+      1. https://github.com/rust-lang/rust-analyzer/blob/master/xtask/src/codegen/grammar.rs
+      2. https://github.com/rust-lang/rust-analyzer/blob/master/crates/syntax/rust.ungram
+      3. https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
+   2. Parser:
+      1. Pratt Parser: https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html
+      1. https://github.com/rust-lang/rust-analyzer/blob/master/crates/parser/src/event.rs
 
 2. Rust Analyzer Architecture
-    1. https://github.com/rust-lang/rust-analyzer/blob/d10cdd25e7a5509252aa2af077b66c679e313ba0/docs/dev/architecture.md
+
+   1. https://github.com/rust-lang/rust-analyzer/blob/d10cdd25e7a5509252aa2af077b66c679e313ba0/docs/dev/architecture.md
 
 3. Linked List
-    1. https://rust-unofficial.github.io/too-many-lists/
+
+   1. https://rust-unofficial.github.io/too-many-lists/
 
 4. TypeScript
-    1. checker
-        1. checking: 
-            1. checkSourceElement
-                1. checkVariableStatement
-                2. checkIdentifier
-                    1. getResolvedSymbol
-                        1. resolveName <- createNameResolver
-        2. Public API: 
-            1. getSuggestionDiagnostics
-                1. checkSourceFileWithEagerDiagnostics
-    2. utilities
-        1. createNameResolver
+
+   1. checker
+      1. checking:
+         1. checkSourceElement
+            1. checkVariableStatement
+            2. checkIdentifier
+               1. getResolvedSymbol
+                  1. resolveName <- createNameResolver
+      2. Public API:
+         1. getSuggestionDiagnostics
+            1. checkSourceFileWithEagerDiagnostics
+   2. utilities
+      1. createNameResolver
+
+5. Networking
+   1. https://docs.rs/tower/latest/tower/
+   2. https://tokio.rs/blog/2021-05-14-inventing-the-service-trait
+   3. https://doc.rust-lang.org/std/future/trait.Future.html
+   4. https://emschwartz.me/async-rust-can-be-a-pleasure-to-work-with-without-send-sync-static/

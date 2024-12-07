@@ -7,16 +7,18 @@ use boring_rpc_analyzer::{
 use boring_rpc_parser::parser::Parser;
 use boring_rpc_resolver::Resolver;
 use boring_rpc_syn::{nodes, SyntaxNode};
-use boring_rpc_vfs::{mem_fs::MemFs, vfs::Vfs};
+use boring_rpc_vfs::{Fs, MemFs, Vfs};
 
 use boring_rpc_printers::Printer;
 
 #[cfg(test)]
 mod test_compiler;
 
+#[derive(Default)]
 pub struct CompilerOptions {
-    entry_point: PathBuf,
-    writers: Vec<Box<dyn Printer>>,
+    pub entry_point: PathBuf,
+    pub out_dir: PathBuf,
+    pub writers: Vec<Box<dyn Printer>>,
 }
 
 pub struct Compiler<V: Vfs> {
@@ -33,12 +35,24 @@ pub struct CompilationResult {
 }
 
 impl<V: Vfs> Compiler<V> {
-    pub fn in_mem(vfs: MemFs, options: CompilerOptions) -> Compiler<MemFs> {
+    pub fn new_in_mem(vfs: MemFs, options: CompilerOptions) -> Compiler<MemFs> {
         let vfs = Rc::new(vfs);
 
         let root = options.entry_point.parent().unwrap();
 
         Compiler::<MemFs> {
+            vfs: vfs.clone(),
+            resolver: Resolver::new(vfs.clone(), root.into()),
+            semantic_store: SemanticStore::default(),
+            type_store: TypeStore::new(),
+            options,
+        }
+    }
+
+    pub fn new(vfs: Rc<V>, options: CompilerOptions) -> Compiler<V> {
+        let root = options.entry_point.parent().unwrap();
+
+        Compiler::<V> {
             vfs: vfs.clone(),
             resolver: Resolver::new(vfs.clone(), root.into()),
             semantic_store: SemanticStore::default(),
@@ -75,9 +89,10 @@ impl<V: Vfs> Compiler<V> {
 
             writer.write(&mut output, &module_type).unwrap();
 
-            result
-                .outputs
-                .push(("output.ts".into(), String::from_utf8(output).unwrap()));
+            result.outputs.push((
+                self.options.out_dir.join(writer.file_name()).to_str().unwrap().into(),
+                String::from_utf8(output).unwrap(),
+            ));
         }
 
         result

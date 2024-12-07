@@ -1,0 +1,18 @@
+[package]
+name = "boring_rpc"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+boring_rpc_syn = { path = "../boring_rpc_syn" }
+boring_rpc_vfs = { path = "../boring_rpc_vfs" }
+boring_rpc_analyzer = { path = "../boring_rpc_analyzer" }
+boring_rpc_parser = { path = "../boring_rpc_parser" }
+boring_rpc_printers = { path = "../boring_rpc_printers" }
+boring_rpc_resolver = { path = "../boring_rpc_resolver" }
+boring_rpc_compiler = { path = "../boring_rpc_compiler" }
+clap = { version = "4.5.21", features = ["derive"] }
+anyhow = "1.0.93"
+
+[dev-dependencies]
+expect-test = "1.5.0"

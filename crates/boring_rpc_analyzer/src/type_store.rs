@@ -4,7 +4,7 @@ use std::{
 };
 
 use boring_rpc_resolver::Resolver;
-use boring_rpc_vfs::vfs::Vfs;
+use boring_rpc_vfs::Vfs;
 
 use crate::semantic_store::{self, DeclId, SemanticStore, TypeExprNode};
 

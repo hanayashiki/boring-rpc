@@ -1,1 +1,3 @@
-pub mod compiler;
+mod compiler;
+
+pub use compiler::{Compiler, CompilerOptions};

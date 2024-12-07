@@ -1,8 +1,7 @@
 use std::rc::Rc;
 
 use boring_rpc_resolver::Resolver;
-use boring_rpc_vfs::mem_fs::MemFs;
-use expect_test::expect;
+use boring_rpc_vfs::MemFs;
 
 use crate::{
     semantic_store::SemanticStore,

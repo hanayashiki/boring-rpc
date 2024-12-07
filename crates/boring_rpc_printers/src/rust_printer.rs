@@ -8,9 +8,32 @@ use boring_rpc_analyzer::type_store::{self, TypeRef};
 
 pub struct RustPrinter {}
 
+impl RustPrinter {
+    fn get_header(&self) -> &[&str] {
+        return &[
+            "use serde::{Serialize, Deserialize};",
+        ];
+    }
+
+    fn get_derives(&self) -> &str {
+        return "#[derive(Debug, Clone, Serialize, Deserialize)]";
+    }
+}
+
 impl Printer for RustPrinter {
+    fn file_name(&self) -> String {
+        "schema.rs".to_string()
+    }
+
     fn write(&self, writer: &mut dyn Write, module: &type_store::Module) -> Result<()> {
+        for header in self.get_header() {
+            write!(writer, "{}\n", header)?;
+        }
+
+        writeln!(writer)?;
+
         for ty in module.types.iter() {
+            write!(writer, "{}\n", self.get_derives())?;
             write!(writer, "pub struct {} {{", ty.name)?;
             if ty.fields.len() > 0 {
                 write!(

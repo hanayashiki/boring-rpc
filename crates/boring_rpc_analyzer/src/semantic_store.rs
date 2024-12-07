@@ -5,7 +5,7 @@ use boring_rpc_syn::{SyntaxNode, SyntaxNodeId};
 
 use boring_rpc_parser::parser::Parser;
 use boring_rpc_syn::{nodes, AstNode, AstToken};
-use boring_rpc_vfs::vfs::Vfs;
+use boring_rpc_vfs::Vfs;
 
 #[cfg(test)]
 mod test_semantic_store;

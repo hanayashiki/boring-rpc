@@ -4,7 +4,7 @@ use thiserror::Error;
 
 use boring_rpc_parser::parser::Parser;
 use boring_rpc_syn::{nodes, AstNode, SyntaxNode};
-use boring_rpc_vfs::vfs::Vfs;
+use boring_rpc_vfs::Vfs;
 
 pub struct Resolver<V: Vfs> {
     vfs: Rc<V>,

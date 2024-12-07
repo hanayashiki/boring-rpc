@@ -6,6 +6,10 @@ use boring_rpc_analyzer::type_store::{self, TypeRef};
 pub struct TypeScriptPrinter {}
 
 impl Printer for TypeScriptPrinter {
+    fn file_name(&self) -> String {
+        "schema.ts".to_string()
+    }
+
     fn write(&self, writer: &mut dyn Write, module: &type_store::Module) -> Result<()> {
         for ty in module.types.iter() {
             write!(writer, "export interface {} {{", ty.name)?;
