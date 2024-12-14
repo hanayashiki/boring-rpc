@@ -931,9 +931,6 @@ impl ServiceMethod {
     pub fn decorator_attrs(&self) -> Option<DecoratorAttrs> {
         self.syntax().cast_child::<DecoratorAttrs>()
     }
-    pub fn field_list(&self) -> Option<FieldList> {
-        self.syntax().cast_child::<FieldList>()
-    }
     pub fn macro_attrs(&self) -> Option<MacroAttrs> {
         self.syntax().cast_child::<MacroAttrs>()
     }
@@ -942,5 +939,8 @@ impl ServiceMethod {
     }
     pub fn method_return(&self) -> Option<TypeExpr> {
         self.syntax().cast_child::<TypeExpr>()
+    }
+    pub fn parameters(&self) -> Option<FieldList> {
+        self.syntax().cast_child::<FieldList>()
     }
 }

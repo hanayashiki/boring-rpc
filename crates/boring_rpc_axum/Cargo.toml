@@ -1,0 +1,11 @@
+[package]
+name = "boring_rpc_router"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.7.9"
+serde = { "version" = "1.0.215", features = ["derive"] }
+
+[dev-dependencies]
+tokio = { "version" = "1.42.0", features = ["full"] }

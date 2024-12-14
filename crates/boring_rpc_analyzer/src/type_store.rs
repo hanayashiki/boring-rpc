@@ -19,8 +19,8 @@ mod test_import_decl;
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct TypeId {
-    module_id: semantic_store::ModuleId,
-    name: String,
+    pub module_id: semantic_store::ModuleId,
+    pub name: String,
 }
 
 impl From<DeclId> for TypeId {

@@ -7,12 +7,14 @@ use boring_rpc_analyzer::{
 use boring_rpc_parser::parser::Parser;
 use boring_rpc_resolver::Resolver;
 use boring_rpc_syn::{nodes, SyntaxNode};
-use boring_rpc_vfs::{Fs, MemFs, Vfs};
+use boring_rpc_vfs::{MemFs, Vfs};
 
 use boring_rpc_printers::Printer;
 
 #[cfg(test)]
 mod test_compiler;
+#[cfg(test)]
+mod test_rust_axum;
 
 #[derive(Default)]
 pub struct CompilerOptions {

@@ -1,9 +1,9 @@
-use std::{f32::consts::E, io, path::PathBuf, rc::Rc};
+use std::{io, path::PathBuf, rc::Rc};
 
 use thiserror::Error;
 
 use boring_rpc_parser::parser::Parser;
-use boring_rpc_syn::{nodes, AstNode, SyntaxNode};
+use boring_rpc_syn::{nodes, SyntaxNode};
 use boring_rpc_vfs::Vfs;
 
 pub struct Resolver<V: Vfs> {

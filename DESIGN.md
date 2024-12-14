@@ -143,6 +143,17 @@ type Date = {
 
 But if you do that, you cannot `import { Date } from 'std'` anymore.
 
+## Compilation
+
+1. The user runs the compiler from the entry point.
+
+2. For the entry point and every `import` seen, we recursively resolve the module and infer its types.
+   1. This indicates that:
+      1. For every module referenced by an entrypoint, there should be no name conflicts within types and services. This ensures we can always write names verbatimly in the target language and keep the naming simple.
+      2. For every module imported, all of their types will be compiled.
+
+3. We convert the types to target languages structs and the services to client or server.
+
 ## References
 
 1. Rust Analyzer Syntax: https://rust-analyzer.github.io/blog/2020/10/24/introducing-ungrammar.html

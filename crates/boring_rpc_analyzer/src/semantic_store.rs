@@ -87,7 +87,11 @@ pub struct SemanticStore {
 impl SemanticStore {
     pub fn build_module(&mut self, module_id: ModuleId, ast: &nodes::Module) -> ModuleId {
         let type_decls = map_statements(ast, |statement| -> Option<TypeDecl> {
-            Some(self.build_type_decl(module_id.clone(), &statement.type_decl()?))
+            if let Some(type_decl) = statement.type_decl() {
+                Some(self.build_type_decl(module_id.clone(), &type_decl))
+            } else {
+                None
+            }
         });
 
         let import_decls = map_statements(ast, |statement| -> Option<ImportDecl> {

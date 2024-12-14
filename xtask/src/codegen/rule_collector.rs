@@ -16,10 +16,11 @@ pub struct RuleCollector<'a> {
     fields: BTreeMap<String, NodeField>,
     /// Are we collecting inside a [Rule::Rep]?
     many: bool,
+    current_label: Option<String>,
 }
 
 /// Collects fields of a rule where concrete syntax is stored.
-/// 
+///
 /// Fields are given default names by heuristics. Name collisions are not handled, and the last definition wins.
 impl RuleCollector<'_> {
     pub fn new<'a>(grammar: &'a Grammar, rule: &'a Rule) -> RuleCollector<'a> {
@@ -28,6 +29,7 @@ impl RuleCollector<'_> {
             rule,
             fields: BTreeMap::new(),
             many: false,
+            current_label: None,
         }
     }
 
@@ -46,16 +48,17 @@ impl RuleCollector<'_> {
             Rule::Token(token) => {
                 let token = &self.grammar[*token];
 
-                self.fields
-                    .insert(token.name.clone(), NodeField::Token(token.name.clone()));
+                self.fields.insert(
+                    self.current_label.as_ref().unwrap_or(&token.name).clone(),
+                    NodeField::Token(token.name.clone()),
+                );
             }
             Rule::Node(node) => {
                 let node = &self.grammar[*node];
-                let ty = node.name.clone();
                 self.fields.insert(
-                    node.name.clone(),
+                    self.current_label.as_ref().unwrap_or(&node.name).clone(),
                     NodeField::Node {
-                        ty,
+                        ty: node.name.clone(),
                         many: self.many,
                     },
                 );
@@ -75,19 +78,11 @@ impl RuleCollector<'_> {
                 self.fields.extend(inner_collector.collect().clone());
             }
             Rule::Labeled { rule, label } => {
-                if let Rule::Node(node) = **rule {
-                    let node = &self.grammar[node];
-                    let ty = node.name.clone();
-                    self.fields.insert(
-                        label.clone(),
-                        NodeField::Node {
-                            ty,
-                            many: self.many,
-                        },
-                    );
-                } else {
-                    assert!(false, "Labeled rule must be a node");
-                }
+                let old_label = self.current_label.clone();
+                self.current_label = Some(label.clone());
+
+                self.collect_rule(rule);
+                self.current_label = old_label;
             }
         }
     }

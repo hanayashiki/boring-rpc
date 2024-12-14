@@ -99,7 +99,7 @@ ServiceMethod =
   DecoratorAttrs?
   method_name:Name
   '('
-  FieldList?
+  parameters:FieldList?
   ')'
   ':'
   method_return:TypeExpr
