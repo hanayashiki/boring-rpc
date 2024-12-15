@@ -1,6 +1,6 @@
 use expect_test::expect;
 
-use crate::type_store::test_utils::check;
+use crate::test_utils::check;
 
 #[test]
 fn test_simple_import() {
@@ -20,6 +20,7 @@ fn test_simple_import() {
                 types: [
                     Type {
                         name: "A",
+                        kind: Type,
                         fields: [
                             (
                                 "b",

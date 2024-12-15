@@ -3,15 +3,13 @@ use std::rc::Rc;
 use boring_rpc_resolver::Resolver;
 use boring_rpc_vfs::MemFs;
 
-use crate::{
+use boring_rpc_analyzer::{
     semantic_store::SemanticStore,
     type_store::{InferenceContext, TypeStore},
 };
 
 /// Check a list of files (using the first one as entry point), get the infered types
 pub fn check(files: &[(&str, &str)], expect: expect_test::Expect) {
-    let mut parser = boring_rpc_parser::parser::Parser::of(files[0].1);
-
     let mut semantic_store = SemanticStore::default();
     let mut type_store = TypeStore::new();
     let vfs = Rc::new(MemFs::from(files));

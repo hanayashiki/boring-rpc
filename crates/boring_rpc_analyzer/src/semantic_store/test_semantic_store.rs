@@ -70,3 +70,71 @@ fn test_import_decl() {
             }"#]],
     );
 }
+
+#[test]
+fn test_service_decl() {
+    check(
+        "
+            service A {
+                a(): number
+            }
+        ",
+        expect![[r#"
+            Module {
+                module_id: ModuleId(
+                    "inline",
+                ),
+                type_decls: [
+                    TypeDecl {
+                        name: "A",
+                        kind: Service,
+                        fields: [
+                            Field {
+                                name: "a",
+                                syntax_node_id: SyntaxNodeId {
+                                    kind: ServiceMethod,
+                                    offset: 41,
+                                },
+                                field_type: Some(
+                                    TypeExpr {
+                                        syntax_node_id: SyntaxNodeId {
+                                            kind: ServiceMethod,
+                                            offset: 41,
+                                        },
+                                        node: TypeExprMethod {
+                                            syntax_node_id: SyntaxNodeId {
+                                                kind: ServiceMethod,
+                                                offset: 41,
+                                            },
+                                            name: "a",
+                                            fields: [],
+                                            return_type: Some(
+                                                TypeExpr {
+                                                    syntax_node_id: SyntaxNodeId {
+                                                        kind: TypeExpr,
+                                                        offset: 46,
+                                                    },
+                                                    node: TypeExprName {
+                                                        syntax_node_id: SyntaxNodeId {
+                                                            kind: TypeExpr,
+                                                            offset: 46,
+                                                        },
+                                                        name: "number",
+                                                    },
+                                                },
+                                            ),
+                                        },
+                                    },
+                                ),
+                            },
+                        ],
+                        syntax_node_id: SyntaxNodeId {
+                            kind: ServiceDecl,
+                            offset: 13,
+                        },
+                    },
+                ],
+                import_decls: [],
+            }"#]],
+    )
+}

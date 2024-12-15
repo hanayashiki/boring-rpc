@@ -1,10 +1,9 @@
-use std::{collections::BTreeMap, rc::Rc};
+use std::{clone, collections::BTreeMap, rc::Rc};
 
 use boring_rpc_resolver::{Resolution, ResolutionId, Resolver};
-use boring_rpc_syn::{SyntaxNode, SyntaxNodeId};
+use boring_rpc_syn::{nodes, AstNode, AstToken, SyntaxNode, SyntaxNodeId};
 
 use boring_rpc_parser::parser::Parser;
-use boring_rpc_syn::{nodes, AstNode, AstToken};
 use boring_rpc_vfs::Vfs;
 
 #[cfg(test)]
@@ -68,7 +67,16 @@ pub struct TypeExpr {
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub enum TypeExprNode {
-    Name(String),
+    TypeExprName {
+        syntax_node_id: SyntaxNodeId,
+        name: String,
+    },
+    TypeExprMethod {
+        syntax_node_id: SyntaxNodeId,
+        name: String,
+        fields: Vec<Field>,
+        return_type: Option<Box<TypeExpr>>,
+    },
 }
 
 #[derive(Debug, Clone)]
@@ -88,7 +96,9 @@ impl SemanticStore {
     pub fn build_module(&mut self, module_id: ModuleId, ast: &nodes::Module) -> ModuleId {
         let type_decls = map_statements(ast, |statement| -> Option<TypeDecl> {
             if let Some(type_decl) = statement.type_decl() {
-                Some(self.build_type_decl(module_id.clone(), &type_decl))
+                Some(self.build_type_decl_as_type(module_id.clone(), &type_decl))
+            } else if let Some(service_decl) = statement.service_decl() {
+                Some(self.build_type_decl_as_service(module_id.clone(), &service_decl))
             } else {
                 None
             }
@@ -110,7 +120,7 @@ impl SemanticStore {
         module_id
     }
 
-    fn build_type_decl(&mut self, module_id: ModuleId, ast: &nodes::TypeDecl) -> TypeDecl {
+    fn build_type_decl_as_type(&mut self, module_id: ModuleId, ast: &nodes::TypeDecl) -> TypeDecl {
         let name = ast
             .name()
             .iter()
@@ -121,7 +131,7 @@ impl SemanticStore {
 
         TypeDecl {
             name,
-            // TODO: other kinds
+            // TODO: scalar type
             kind: TypeDeclKind::Type,
             syntax_node_id: ast.syntax().id(),
             fields: ast.field_list().map_or(vec![], |field| {
@@ -134,13 +144,79 @@ impl SemanticStore {
         }
     }
 
-    fn build_field(&mut self, module_id: ModuleId, ast: &nodes::Field) -> Field {
-        let default_name = "#default_name";
+    fn build_type_decl_as_service(
+        &mut self,
+        module_id: ModuleId,
+        ast: &nodes::ServiceDecl,
+    ) -> TypeDecl {
+        let name = ast
+            .name()
+            .iter()
+            .filter_map(|f| f.ident())
+            .map(|s| s.syntax().value().to_string())
+            .next()
+            .unwrap_or("#default_name".into());
 
-        let name = ast.field_name().map_or(default_name.into(), |n| {
-            n.ident()
-                .map_or(default_name.into(), |n| n.syntax().value().to_string())
-        });
+        TypeDecl {
+            name,
+            kind: TypeDeclKind::Service,
+            syntax_node_id: ast.syntax().id(),
+            fields: ast
+                .service_method_list()
+                .map_or(vec![], |service_method_list| {
+                    service_method_list
+                        .service_methods()
+                        .iter()
+                        .map(|service_method| {
+                            self.build_service_method(module_id.clone(), service_method)
+                        })
+                        .collect()
+                }),
+        }
+    }
+
+    fn build_service_method(
+        &mut self,
+        module_id: ModuleId,
+        service_method: &nodes::ServiceMethod,
+    ) -> Field {
+        let name =
+            Self::parse_name(&service_method.method_name()).unwrap_or("#default_name".into());
+
+        let parameters = service_method
+            .parameters()
+            .and_then(|field_list| {
+                Some(
+                    field_list
+                        .fields()
+                        .iter()
+                        .map(|f| self.build_field(module_id.clone(), f))
+                        .collect(),
+                )
+            })
+            .unwrap_or(vec![]);
+
+        let return_type = service_method
+            .method_return()
+            .map(|method_return| self.build_type_expr(module_id.clone(), &method_return));
+
+        Field {
+            name: name.clone(),
+            syntax_node_id: service_method.syntax().id(),
+            field_type: Some(TypeExpr {
+                syntax_node_id: service_method.syntax().id(),
+                node: TypeExprNode::TypeExprMethod {
+                    syntax_node_id: service_method.syntax().id(),
+                    name,
+                    fields: parameters,
+                    return_type: return_type.map(Box::new),
+                },
+            }),
+        }
+    }
+
+    fn build_field(&mut self, module_id: ModuleId, ast: &nodes::Field) -> Field {
+        let name = Self::parse_name(&ast.field_name()).unwrap_or("#default_name".to_string());
 
         Field {
             name,
@@ -153,35 +229,30 @@ impl SemanticStore {
     }
 
     fn build_type_expr(&mut self, module_id: ModuleId, ast: &nodes::TypeExpr) -> TypeExpr {
+        let name: String = Self::parse_name(&ast.name()).unwrap_or("#default_name".into());
+
         TypeExpr {
             syntax_node_id: ast.syntax().id(),
-            node: TypeExprNode::Name(ast.name().map_or("#default_name".into(), |n| {
-                n.ident()
-                    .map_or("#default_name".into(), |n| n.syntax().value().to_string())
-            })),
+            node: TypeExprNode::TypeExprName {
+                name,
+                syntax_node_id: ast.syntax().id(),
+            },
         }
     }
 
     fn build_import_decl(&mut self, ast: &nodes::ImportDecl) -> ImportDecl {
         ImportDecl {
             syntax_node_id: ast.syntax().id(),
-            star: ast
-                .import_body()
-                .iter()
-                .map(|s| s.star().is_some())
-                .next()
-                .unwrap_or(false),
+            star: ast.import_body().map_or(false, |import_body| import_body.star().is_some()),
             names: ast
                 .import_body()
-                .iter()
-                .filter_map(|f| f.import_specifier_list())
-                .map(|f| f.import_specifiers())
-                .map(|s| {
-                    s.iter()
+                .and_then(|f| f.import_specifier_list())
+                .map(|f| {
+                    f.import_specifiers()
+                        .iter()
                         .filter_map(|s| Some(s.ident()?.syntax().value().to_string()))
                         .collect()
                 })
-                .next()
                 .unwrap_or(vec![]),
             source: ast
                 .import_source()
@@ -245,6 +316,12 @@ impl SemanticStore {
         let module_id = store.build_module(ModuleId::new("inline"), &module);
 
         store.get_module(module_id).clone().unwrap()
+    }
+
+    fn parse_name(name: &Option<nodes::Name>) -> Option<String> {
+        return name
+            .as_ref()
+            .and_then(|name| name.ident().map(|ident| ident.syntax().value().to_string()));
     }
 }
 

@@ -8,15 +8,6 @@ use boring_rpc_vfs::Vfs;
 
 use crate::semantic_store::{self, DeclId, SemanticStore, TypeExprNode};
 
-#[cfg(test)]
-mod test_utils;
-
-#[cfg(test)]
-mod test_infer_type_decl;
-
-#[cfg(test)]
-mod test_import_decl;
-
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct TypeId {
     pub module_id: semantic_store::ModuleId,
@@ -30,8 +21,26 @@ impl From<DeclId> for TypeId {
 }
 
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
+pub enum TypeKind {
+    Type,
+    Service,
+    Scalar,
+}
+
+impl From<semantic_store::TypeDeclKind> for TypeKind {
+    fn from(kind: semantic_store::TypeDeclKind) -> Self {
+        match kind {
+            semantic_store::TypeDeclKind::Type => TypeKind::Type,
+            semantic_store::TypeDeclKind::Service => TypeKind::Service,
+            semantic_store::TypeDeclKind::Scalar => TypeKind::Scalar,
+        }
+    }
+}
+
+#[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub struct Type {
     pub name: String,
+    pub kind: TypeKind,
     pub fields: Vec<(String, TypeExpr)>,
 }
 
@@ -50,6 +59,10 @@ pub enum TypeRef {
 #[derive(Hash, Eq, PartialEq, Debug, Clone)]
 pub enum TypeExpr {
     TypeRef(TypeRef),
+    Method {
+        parameters: Box<[(String, TypeExpr)]>,
+        method_return: Box<TypeExpr>,
+    },
     Array(Box<TypeExpr>),
 }
 
@@ -88,6 +101,7 @@ impl<V: Vfs> TypeStore<V> {
 
         Type {
             name: type_decl.name.clone(),
+            kind: type_decl.kind.clone().into(),
             fields: type_decl
                 .fields
                 .iter()
@@ -116,7 +130,7 @@ impl<V: Vfs> TypeStore<V> {
         ctx: &mut InferenceContext<V>,
     ) -> TypeExpr {
         match &type_expr.node {
-            TypeExprNode::Name(name) => {
+            TypeExprNode::TypeExprName { name, .. } => {
                 match ctx
                     .sementic_store
                     .resolve_name(ctx.module_id.clone(), name, ctx.resolver)
@@ -125,6 +139,36 @@ impl<V: Vfs> TypeStore<V> {
                     None => Self::name_to_primitive(name)
                         .map(|primitive| TypeExpr::TypeRef(TypeRef::PrimitiveType(primitive)))
                         .unwrap_or(TypeExpr::TypeRef(TypeRef::Unknown)),
+                }
+            }
+            TypeExprNode::TypeExprMethod {
+                fields,
+                return_type,
+                ..
+            } => {
+                let parameters: Box<[(String, TypeExpr)]> = fields
+                    .iter()
+                    .map(|field| -> (String, TypeExpr) {
+                        (
+                            field.name.clone(),
+                            self.infer_type_expr(
+                                field.field_type.as_ref().expect("to handle missing type"),
+                                ctx,
+                            ),
+                        )
+                    })
+                    .collect::<Vec<_>>()
+                    .into();
+
+                let method_return =
+                    Box::new(self.infer_type_expr(
+                        return_type.as_ref().expect("to handle missing type"),
+                        ctx,
+                    ));
+
+                TypeExpr::Method {
+                    parameters,
+                    method_return,
                 }
             }
         }

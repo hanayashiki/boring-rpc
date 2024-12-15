@@ -396,7 +396,7 @@ impl Parser {
     fn parse_service_decl(&mut self) -> GreenNode {
         let service_kw = self.eat_keyword().unwrap();
         assert!(service_kw.kind() == SyntaxKind::ServiceKeyword);
-        println!("1");
+
         let mut node = GreenNode::new(SyntaxKind::ServiceDecl, vec![Token(service_kw)]);
 
         {
@@ -413,7 +413,6 @@ impl Parser {
             self.eat_push(node, SyntaxKind::Whitespace);
 
             if let SyntaxKind::Hash | SyntaxKind::At | SyntaxKind::Ident = self.peek().kind() {
-                println!("2");
                 node.push(Node(self.parse_service_method_list()))
             }
 
@@ -449,7 +448,7 @@ impl Parser {
     fn parse_service_method(&mut self) -> GreenNode {
         assert!(self.peek().kind() == SyntaxKind::Ident);
 
-        let mut node = GreenNode::new(SyntaxKind::Field, vec![]);
+        let mut node = GreenNode::new(SyntaxKind::ServiceMethod, vec![]);
         {
             let node = &mut node;
 

@@ -1,6 +1,6 @@
 use expect_test::expect;
 
-use crate::type_store::test_utils::check;
+use crate::test_utils::check;
 
 #[test]
 fn test_simple_type() {
@@ -11,6 +11,7 @@ fn test_simple_type() {
                 types: [
                     Type {
                         name: "A",
+                        kind: Type,
                         fields: [],
                     },
                 ],
@@ -27,6 +28,7 @@ fn test_string_fields() {
                 types: [
                     Type {
                         name: "A",
+                        kind: Type,
                         fields: [
                             (
                                 "a",

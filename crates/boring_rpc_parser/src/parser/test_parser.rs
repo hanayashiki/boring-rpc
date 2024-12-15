@@ -295,7 +295,7 @@ fn service_decl() {
                             LCurly "{"
                             Whitespace " "
                             ServiceMethodList
-                                Field
+                                ServiceMethod
                                     Name
                                         Ident "rpc"
                                     LParenthesis "("
@@ -325,7 +325,7 @@ fn service_decl() {
                             LCurly "{"
                             Whitespace " "
                             ServiceMethodList
-                                Field
+                                ServiceMethod
                                     Name
                                         Ident "rpc"
                                     LParenthesis "("
