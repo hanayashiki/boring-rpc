@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "crates/*",
+  "examples/rust-ts/server",
   "xtask",
 ]
 resolver = "2"

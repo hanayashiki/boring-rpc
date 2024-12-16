@@ -1,0 +1,10 @@
+[package]
+name = "rust-ts"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { "version" = "1.42.0", features = ["full"] }
+axum = "0.7.9"
+serde = { "version" = "1.0.215", features = ["derive"] }
+boring_rpc_axum = { path = "../../../crates/boring_rpc_axum" }

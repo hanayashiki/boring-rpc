@@ -4,10 +4,10 @@ use std::{
     path::Path,
 };
 use xshell::{cmd, Shell};
+use boring_rpc_common::to_lower_snake_case;
 
 use ungrammar::Grammar;
 
-use crate::codegen::utils;
 use crate::codegen::{
     constants::TOKEN_DEFS,
     rule_collector::{NodeField, RuleCollector},
@@ -110,7 +110,7 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
                     .find(|(ungram_name, _)| ungram_name == token_ungram_name)
                     .expect(format!("{} is not a valid token", token_ungram_name).as_str())
                     .1;
-                let name = format_ident!("{}", utils::to_lower_snake_case(struct_name));
+                let name = format_ident!("{}", to_lower_snake_case(struct_name));
                 let ty = format_ident!("{}", struct_name);
 
                 quote! {
@@ -122,7 +122,7 @@ fn generate_nodes_rs(grammar: &Grammar) -> String {
             NodeField::Node { many, ty } => {
                 let name = format_ident!(
                     "{}{}",
-                    utils::to_lower_snake_case(name),
+                    to_lower_snake_case(name),
                     match many {
                         true => "s",
                         false => "",

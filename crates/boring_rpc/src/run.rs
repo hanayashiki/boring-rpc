@@ -20,7 +20,7 @@ where
         entry_point: std::path::PathBuf::from(entry_point),
         out_dir: out_dir.into(),
         writers: vec![
-            Box::new(boring_rpc_printers::TypeScriptPrinter {}),
+            // Box::new(boring_rpc_printers::TypeScriptPrinter {}),
             Box::new(boring_rpc_printers::RustPrinter {}),
         ],
     };

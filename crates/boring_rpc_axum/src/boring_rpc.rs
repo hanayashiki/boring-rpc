@@ -57,6 +57,7 @@ macro_rules! impl_rpc_handler {
     (
         $($ty:ident),*
     ) => {
+        #[allow(non_snake_case)]
         impl<F, Fut, S, Req, Res, $($ty,)*> BoringRPCHandler<($($ty,)*), Req, Res, S> for F
         where
             F: FnOnce($($ty,)* Req) -> Fut + Clone + Send + Sync + 'static,
@@ -70,6 +71,7 @@ macro_rules! impl_rpc_handler {
 
             fn call(self, req: Request, state: S) -> Self::Future {
                 Box::pin(async move {
+                    #[allow(unused_mut)]
                     let (mut parts, body) = req.into_parts();
                     let state = &state;
 

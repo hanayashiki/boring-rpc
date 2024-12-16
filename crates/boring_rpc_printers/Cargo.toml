@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 boring_rpc_analyzer = { path = "../boring_rpc_analyzer" }
+boring_rpc_common = { path = "../boring_rpc_common" }
 prettyplease = "0.2.25"
 proc-macro2 = "1.0.92"
 quote = "1.0.37"

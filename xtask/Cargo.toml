@@ -8,3 +8,4 @@ anyhow = "1.0.89"
 quote = "1.0.37"
 ungrammar = "1.16.1"
 xshell = "0.2.6"
+boring_rpc_common = { path = ".././crates/boring_rpc_common" }

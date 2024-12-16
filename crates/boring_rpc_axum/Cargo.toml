@@ -1,5 +1,5 @@
 [package]
-name = "boring_rpc_router"
+name = "boring_rpc_axum"
 version = "0.1.0"
 edition = "2021"
 

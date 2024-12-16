@@ -193,6 +193,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "boring_rpc_axum"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "serde",
+ "tokio",
+]
+
+[[package]]
+name = "boring_rpc_common"
+version = "0.1.0"
+
+[[package]]
 name = "boring_rpc_compiler"
 version = "0.0.1"
 dependencies = [
@@ -222,6 +235,7 @@ name = "boring_rpc_printers"
 version = "0.0.0"
 dependencies = [
  "boring_rpc_analyzer",
+ "boring_rpc_common",
  "expect-test",
  "prettyplease",
  "proc-macro2",
@@ -240,15 +254,6 @@ dependencies = [
  "boring_rpc_vfs",
  "expect-test",
  "thiserror",
-]
-
-[[package]]
-name = "boring_rpc_router"
-version = "0.1.0"
-dependencies = [
- "axum",
- "serde",
- "tokio",
 ]
 
 [[package]]
@@ -644,6 +649,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "rust-ts"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "boring_rpc_axum",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "rustc-demangle"
 version = "0.1.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1004,6 +1019,7 @@ name = "xtask"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "boring_rpc_common",
  "quote",
  "ungrammar",
  "xshell",

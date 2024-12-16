@@ -1,5 +1,5 @@
 use axum::Router;
-use boring_rpc_router::{BoringRPC, BoringRPCHandler};
+use boring_rpc_axum::{BoringRPC, BoringRPCHandler};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
