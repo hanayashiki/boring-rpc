@@ -6,3 +6,4 @@ type Message = {
 service Chat {
     get_message_by_id(id: number): Message,
 }
+ 

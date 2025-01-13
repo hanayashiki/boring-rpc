@@ -191,6 +191,7 @@ impl SyntaxNode {
 #[derive(Debug)]
 struct SyntaxNodeInner {
     offset: u32,
+    /// Pointer to current green node
     green_node: *const GreenNode,
     parent: Weak<SyntaxNodeInner>,
 

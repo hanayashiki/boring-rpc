@@ -1,6 +1,6 @@
 use anyhow::Result;
 use boring_rpc_compiler::{Compiler, CompilerOptions};
-use boring_rpc_vfs::{Fs, Vfs};
+use boring_rpc_vfs::Fs;
 use clap::Parser;
 use std::{ffi::OsString, rc::Rc};
 
@@ -31,7 +31,7 @@ where
     let result = compiler.compile();
 
     for (name, content) in result.outputs {
-        fs.write(&name, &content)?;
+        // fs.write(&name, &content)?;
     }
 
     Ok(())

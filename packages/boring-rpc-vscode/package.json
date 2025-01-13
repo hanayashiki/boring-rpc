@@ -1,0 +1,45 @@
+{
+  "name": "boring-rpc-vscode",
+  "displayName": "Boring RPC",
+  "description": "Language support for Boring RPC",
+  "version": "0.0.1",
+  "publisher": "Chenyu Wang",
+  "repository": "https://github.com/hanayashiki/boring-rpc/packages/boring-rpc-vscode",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "Formatters",
+    "Programming Languages"
+  ],
+  "main": "./dist/main.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "boring-rpc",
+        "extensions": [
+          ".br"
+        ],
+        "aliases": [
+          "Boring RPC",
+          "rs"
+        ],
+        "configuration": "language-configuration.json"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "esbuild ./src/main.ts --bundle --outfile=dist/main.js --external:vscode --format=cjs --platform=node --target=node20"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.73.0"
+  },
+  "dependencies": {
+    "vscode": "^1.1.37",
+    "vscode-languageclient": "^9.0.1"
+  }
+}

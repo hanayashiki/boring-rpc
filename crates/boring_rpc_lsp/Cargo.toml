@@ -1,0 +1,19 @@
+[package]
+name = "boring_rpc_lsp"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+lsp-types = "0.97.0"
+lsp-server = "0.7.8"
+serde = { version = "1.0.216", features = ["derive"] }
+serde_json = "1.0.133"
+boring_rpc_syn = { path = "../boring_rpc_syn" }
+boring_rpc_vfs = { path = "../boring_rpc_vfs" }
+boring_rpc_analyzer = { path = "../boring_rpc_analyzer" }
+boring_rpc_resolver = { path = "../boring_rpc_resolver" }
+anyhow = "1.0.95"
+
+[[bin]]
+name = "boring_rpc_lsp"
+path = "src/bin/boring_rpc_lsp.rs"

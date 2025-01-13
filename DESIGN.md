@@ -194,3 +194,9 @@ But if you do that, you cannot `import { Date } from 'std'` anymore.
    2. https://tokio.rs/blog/2021-05-14-inventing-the-service-trait
    3. https://doc.rust-lang.org/std/future/trait.Future.html
    4. https://emschwartz.me/async-rust-can-be-a-pleasure-to-work-with-without-send-sync-static/
+
+6. Formatter
+   1. VS Code Plugin
+      1. https://github.com/prettier/prettier-vscode
+   1. Ungrammar
+      1. https://github.com/binhtran432k/ungrammar-language-features

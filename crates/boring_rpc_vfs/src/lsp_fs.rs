@@ -1,16 +1,18 @@
 use crate::vfs::Vfs;
-use std::cell::RefCell;
 use std::io::Result;
 use std::{
     collections::HashMap,
     path::{Path, PathBuf},
 };
 
-pub struct MemFs {
+pub enum LspFileChange {}
+
+#[derive(Default, Debug)]
+pub struct LspFs {
     store: HashMap<PathBuf, Vec<u8>>,
 }
 
-impl Vfs for MemFs {
+impl Vfs for LspFs {
     fn read<P: AsRef<Path>>(&self, path: P) -> Result<Vec<u8>> {
         self.store
             .get(path.as_ref())
@@ -19,13 +21,11 @@ impl Vfs for MemFs {
     }
 }
 
-impl MemFs {
-    pub fn from(files: &[(&str, &str)]) -> Self {
-        let store = files
-            .iter()
-            .map(|(path, content)| (PathBuf::from(path), content.as_bytes().to_vec()))
-            .collect();
-
-        Self { store }
+impl LspFs {
+    pub fn set_file_content<P>(&mut self, path: P, change: LspFileChange)
+    where
+        P: AsRef<Path>,
+    {
+        unimplemented!()
     }
 }

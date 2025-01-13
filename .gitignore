@@ -1,4 +1,7 @@
 /target
+dist/
 /playground
 .DS_Store
 /.idea
+
+node_modules/
